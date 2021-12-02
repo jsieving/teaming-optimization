@@ -5,10 +5,10 @@ class Student:
         
         self.name = name
         self.commitment = commitment
-        self.interests = interests if interests else []
+        self.interests = interests or set()
 
-        self.golden_bullets = golden_bullets if golden_bullets else []
-        self.silver_bullets = silver_bullets if silver_bullets else []
+        self.golden_bullets = golden_bullets or set()
+        self.silver_bullets = silver_bullets or set()
 
         self.intr_mgmt = intr_mgmt
         self.exp_mgmt = exp_mgmt
@@ -24,3 +24,6 @@ class Student:
 
         self.intr_fab = intr_fab
         self.exp_fab = exp_fab
+
+    def __repr__(self):
+        return self.name
