@@ -13,23 +13,23 @@ def load_student_data(filename):
     for index, row in data.iterrows():
         # Need to combine data from multiple columns for these fields
         silver_bullet_cols = ["Silver Bullet #1", "Silver Bullet #2"]
-        golden_bullet_cols = ["Golden Bullet #2",
-                            "Golden Bullet #3",
-                            "Golden Bullet #4",
-                            "Golden Bullet #5",
-                            "Golden Bullet #6"]
+        preference_cols = ["Preference #2",
+                            "Preference #3",
+                            "Preference #4",
+                            "Preference #5",
+                            "Preference #6"]
         silver_bullets = set()
-        golden_bullets = set()
+        preferences = set()
 
         for col_name in silver_bullet_cols:
             sb = row[col_name]
             if str(sb) != "nan":
                 silver_bullets.add(sb)
         
-        for col_name in golden_bullet_cols:
-            gb = row[col_name]
-            if str(gb) != "nan":
-                golden_bullets.add(gb)
+        for col_name in preference_cols:
+            pref = row[col_name]
+            if str(pref) != "nan":
+                preferences.add(pref)
 
         # Convert interests to set
         interests = row["Category interests (comma separated categories)"]
@@ -43,7 +43,7 @@ def load_student_data(filename):
             name=row["Name"],
             commitment=row["Commitment (meet req -> beyond)"],
             interests=interests,
-            golden_bullets=golden_bullets,
+            preferences=preferences,
             silver_bullets=silver_bullets,
             intr_mgmt=row["Mgmt intr."],
             exp_mgmt=row["Mgmt exp."],

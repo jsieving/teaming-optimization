@@ -1,5 +1,5 @@
 class Student:
-    def __init__(self, name, commitment=0, interests=None, golden_bullets=None, silver_bullets=None,
+    def __init__(self, name, commitment=0, interests=None, preferences=None, silver_bullets=None,
                  intr_mgmt=0, exp_mgmt=0, intr_elec=0, exp_elec=0, intr_prog=0, exp_prog=0,
                  intr_cad=0, exp_cad=0, intr_fab=0, exp_fab=0):
         
@@ -7,7 +7,7 @@ class Student:
         self.commitment = commitment
         self.interests = interests or set()
 
-        self.golden_bullets = golden_bullets or set()
+        self.preferences = preferences or set()
         self.silver_bullets = silver_bullets or set()
 
         self.intr_mgmt = intr_mgmt

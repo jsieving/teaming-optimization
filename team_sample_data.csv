@@ -1,4 +1,4 @@
-Name,Silver Bullet #1,Silver Bullet #2,Golden Bullet #1,Golden Bullet #2,Golden Bullet #3,Golden Bullet #4,Golden Bullet #5,Golden Bullet #6,Mgmt intr.,Mgmt exp.,Elex intr.,Elex exp.,Prog intr.,Prog exp.,CAD intr.,CAD exp.,Fab intr.,Fab exp.,Commitment (meet req -> beyond),Category interests (comma separated categories)
+Name,Silver Bullet #1,Silver Bullet #2,Preference #1,Preference #2,Preference #3,Preference #4,Preference #5,Preference #6,Mgmt intr.,Mgmt exp.,Elex intr.,Elex exp.,Prog intr.,Prog exp.,CAD intr.,CAD exp.,Fab intr.,Fab exp.,Commitment (meet req -> beyond),Category interests (comma separated categories)
 A,N,A,T,P,O,T,T,W,2,1,3,2,4,5,5,2,3,3,4,"music, art, food"
 B,Z,M,P,M,I,W,V,T,5,4,1,4,2,1,1,3,3,5,1,
 C,Y,I,P,M,P,T,A,T,4,2,2,4,5,1,4,2,2,5,2,mobile robots
