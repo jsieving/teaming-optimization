@@ -3,7 +3,7 @@ Functions which take in a list of students and produce a team assignment
 '''
 from random import shuffle
 from copy import copy, deepcopy
-from helpers import count_students, sorted_teams
+from helpers import count_students, num_size_teams, sorted_teams
 
 def random_assignments(students, prior_teams=None):
     '''
@@ -24,15 +24,15 @@ def random_assignments(students, prior_teams=None):
     shuffle(students)
 
     # Figure out how many teams should have 5 students
-    full_teams, _ = num_size_teams(total_students)
+    teams_of_5, teams_of_4 = num_size_teams(total_students)
     
     # Create any empty teams necessary
-    while len(teams) < reqd_teams:
+    while len(teams) < teams_of_5 + teams_of_4:
         teams.append([])
 
     # Fill each team up to the number of students that minimizes teams
     for i, team in enumerate(teams):
-        team_size = 5 if i < full_teams else 4
+        team_size = 5 if i < teams_of_5 else 4
         while len(team) < team_size:
             team.append(students.pop())
     
