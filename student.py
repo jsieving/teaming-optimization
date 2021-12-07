@@ -30,5 +30,18 @@ class Student:
         self.exp_fab = exp_fab
         self.fab = intr_fab + exp_fab
 
+
     def __repr__(self):
         return self.name
+
+
+    def prefers(self, other_student):
+        if other_student.name in self.preferences:
+            return True
+        return False
+
+
+    def dislikes(self, other_student):
+        if other_student.name in self.silver_bullets:
+            return True
+        return False
