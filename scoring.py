@@ -1,7 +1,7 @@
 '''
 Functions for scoring team assignments on different metrics
 '''
-import math
+import numpy as np
 
 def sample_score_func(teams):
     squared_errors_sum = 0
@@ -9,7 +9,7 @@ def sample_score_func(teams):
         min_commitment = min([student.commitment for student in team])
         max_commitment = max([student.commitment for student in team])
         squared_errors_sum += (max_commitment - min_commitment) ** 2
-    return math.sqrt(squared_errors_sum)
+    return np.sqrt(squared_errors_sum)
 
 
 def compatibility(student1, student2):
@@ -25,7 +25,7 @@ def compatibility(student1, student2):
     common_topics = len(student1.interests & student2.interests)
     mutual_preference = ((student1.name in student2.preferences) +
     (student2.name in student1.preferences))
-    skill_coverage = math.sqrt(
+    skill_coverage = np.sqrt(
         max(student1.mgmt, student2.mgmt)**2
         + max(student1.elec, student2.elec)**2
         + max(student1.prog, student2.prog)**2

@@ -1,4 +1,4 @@
-import math
+import numpy as np
 
 def count_students(teams):
     '''
@@ -31,8 +31,8 @@ def num_size_teams(num_students):
     Returns a tuple of (5-person teams, 4-person teams).
     '''
     # Nonsensical math to figure out how many students on each team
-    reqd_teams = min(math.ceil(num_students / 5),
-                    math.floor(num_students / 4))
+    reqd_teams = min(np.ceil(num_students / 5),
+                    np.floor(num_students / 4))
     full_teams_proxy = reqd_teams - (-num_students % 5)
     teams_of_5 = full_teams_proxy if full_teams_proxy >= 0 else reqd_teams
     teams_of_4 = reqd_teams - teams_of_5
