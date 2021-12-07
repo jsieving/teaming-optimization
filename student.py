@@ -30,6 +30,10 @@ class Student:
         self.exp_fab = exp_fab
         self.fab = intr_fab + exp_fab
 
+        self.intr_mech = (intr_cad + intr_fab) / 2
+        self.exp_mech = (exp_cad + exp_fab) / 2
+        self.mech = self.intr_mech + self.exp_mech
+
 
     def __repr__(self):
         return self.name
