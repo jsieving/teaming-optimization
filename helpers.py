@@ -102,5 +102,96 @@ def count_mutual_partner_prefs(team):
     for studentA, studentB in itertools.combinations(team, 2):
         if studentA.prefers(studentB) and studentB.prefers(studentA):
             mutual_partner_prefs += 1
-        
+
     return mutual_partner_prefs
+
+
+def skill_deficiency(team):
+    '''
+    Calculates how much a team is lacking overall in 4 key areas:
+    management, electrical, programming, and mechanical (CAD + fabrication).
+
+    Assumes that the team's ability in an area is equal to the ability of
+    the strongest student in that area. Currently this is the sum of interest
+    and experience, and a score of 8 is considered to be completely sufficient
+    for any given area.
+    
+    For example, if a team has a student with 3 interest in programming and 5
+    experience, or 4 and 4, that team will be considered to be sufficiently
+    covered for programming.
+
+    The overall deficiency is calculated as the distance that a team is from
+    having at least 8 in each area, with each area treated like a dimension.
+    **This means that having a small deficiency in several areas is better than
+    having a big deficiency in 1 area.**
+    '''
+    # Find out how good (interested + experienced) the best student on the team
+    # is for each area
+    max_mgmt = max(student.mgmt for student in team)
+    max_elec = max(student.elec for student in team)
+    max_prog = max(student.prog for student in team)
+    max_mech = max(student.mech for student in team)
+
+    # If the best student handles each area, how deficient will the team be
+    deficient_mgmt = max(0, 8-max_mgmt)**2
+    deficient_elec = max(0, 8-max_elec)**2
+    deficient_prog = max(0, 8-max_prog)**2
+    deficient_mech = max(0, 8-max_mech)**2
+
+    # Basically computing the "distance" from complete sufficiency
+    overall_deficiency = np.sqrt(sum(
+        [deficient_mgmt, deficient_elec, deficient_prog, deficient_mech]
+    ))
+
+    # Max possible is 12, so noramlize to 0 -> 1
+    return overall_deficiency / 12
+
+
+def percent_strongly_skilled(team):
+    '''
+    Returns the percent of students on a team who are "strongly skilled" at 
+    something.
+
+    "Strongly skilled" is defined as having a total score of 8 or more in
+    combined interest and experience.
+    The goal of this function is to find teams where a couple of students are
+    strong in a lot of areas, and might end up with the responsibility of
+    teaching their teammates a lot. **This is kind of a proxy for making sure
+    that there is a separate student who can "lead" the team in each area.**
+
+    If any student does not have a particular strong skill, this will return
+    less than 1.
+    '''
+    good_mgmt_students = filter(lambda student: student.mgmt >= 8, team)
+    good_elec_students = filter(lambda student: student.elec >= 8, team)
+    good_prog_students = filter(lambda student: student.prog >= 8, team)
+    good_mech_students = filter(lambda student: student.mech >= 8, team)
+    specialized_students = set().union(
+        good_mgmt_students, good_elec_students,
+        good_prog_students, good_mech_students
+    )
+
+    return len(specialized_students) / len(team)
+
+
+def sorted_topic_votes(team):
+    '''
+    Returns a list of the numbers of students who voted for different topics,
+    sorted by number of votes.
+
+    For example, if 3 people on the team vote for a music-related project, 2
+    vote for a robotics-related project, and 1 votes for an art-related project,
+    this will return [3, 2, 1].
+
+    By taking the first n items from the output, another function could figure
+    out how much agreement there can be on the project topic if n topics could
+    be incorporated into the project.
+    '''
+    all_topics = {} # topics liked by some # of students
+
+    # Count up votes for each candidate topic
+    for student in team:
+        for topic in student.interests:
+            all_topics[topic] = all_topics.get(topic, 0) + 1
+
+    return sorted(all_topics.values(), reverse=True)
