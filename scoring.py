@@ -43,12 +43,12 @@ def team_compatibility(team):
     scaled_commitment = (4 - commitment_variance) / 4
     scaled_topics = top_2_topic_votes / (len(team) * num_topics_considered)
     scaled_preference = met_partner_prefs / perm(len(team), 2)
-    scaled_skill_defncy = 1 - skill_defncy
+    skill_sufficiency = 1 - skill_defncy
 
     # Return weighted score (yep, we're normalizing and then weighting them)
     return (
         4 * scaled_commitment +
-        3 * scaled_skill_defncy + 
+        3 * skill_sufficiency + 
         3 * skill_distribution +
         2 * scaled_topics +
         scaled_preference
