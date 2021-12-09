@@ -1,7 +1,7 @@
 from assignments import random_assignments
 from data_loader import load_student_data
-from helpers import compatibility
-from scoring import sample_score_func
+from scoring import compatibility, sample_score_func, team_compatibility
+
 
 filename = input("Enter file name with survey data [team_sample_data.csv]: ") or "team_sample_data.csv"
 
@@ -17,3 +17,6 @@ print("Score (higher is worse): %.2f" % sample_score_func(teams))
 print("%d students could not be assigned to teams." % len(leftovers))
 print(compatibility(*teams[0][:2]))
 print(compatibility(*students[:2]))
+for team in teams:
+    print(team_compatibility(team))
+    print(team_evaluation(team))
