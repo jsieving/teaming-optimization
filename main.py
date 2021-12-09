@@ -2,6 +2,7 @@ from assignments import random_assignments
 from data_loader import load_student_data
 from scoring import compatibility, sample_score_func, team_compatibility
 from helpers import num_size_teams
+from clique-finding import find_k_clique
 
 
 filename = input("Enter file name with survey data [team_sample_data.csv]: ") or "team_sample_data.csv"
@@ -31,9 +32,10 @@ num_students = len(students)
 # Create a graph connecting non-silver-bulleted Student objects as vertices with edge weights representing compatibility
 
 # Figure out how many groups of 4 and 5 to create 
-num_size_teams(num_students)
+num_5teams, num_4teams = num_size_teams(num_students)
 
 # Compute all 4-cliques and take the top n (computed in previous step) non-overlapping groups of size 4
+find_k_clique(graph, num_4teams)
 
 # Eliminate all people assigned in the 5-clique from possible candidates 
 
