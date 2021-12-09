@@ -19,3 +19,4 @@ print(compatibility(*teams[0][:2]))
 print(compatibility(*students[:2]))
 for team in teams:
     print(team_compatibility(team))
+    print(team_evaluation(team))

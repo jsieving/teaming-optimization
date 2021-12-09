@@ -147,6 +147,58 @@ def skill_deficiency(team):
     return overall_deficiency / 12
 
 
+def exp_deficiency(team):
+    '''
+    Like skill_deficiency, but focuses only on experience for technical areas.
+    '''
+    # Find out how good (interested + experienced) the best student on the team
+    # is for each area
+    max_elec = max(student.exp_elec for student in team)
+    max_prog = max(student.exp_prog for student in team)
+    max_fan = max(student.exp_fab for student in team)
+    max_cad = max(student.exp_cad for student in team)
+
+    # If the best student handles each area, how deficient will the team be
+    deficient_elec = max(0, 4-max_elec)**2
+    deficient_prog = max(0, 4-max_prog)**2
+    deficient_fab = max(0, 4-max_fab)**2
+    deficient_cad = max(0, 4-max_cad)**2
+
+    # Basically computing the "distance" from complete sufficiency
+    overall_deficiency = np.sqrt(sum(
+        [deficient_elec, deficient_prog, deficient_fab, deficient_cad]
+    ))
+
+    # Max possible is 6, so noramlize to 0 -> 1
+    return overall_deficiency / 6
+
+
+def intr_deficiency(team):
+    '''
+    Like skill_deficiency, but focuses only on interest for technical areas.
+    '''
+    # Find out how good (interested + experienced) the best student on the team
+    # is for each area
+    max_elec = max(student.intr_elec for student in team)
+    max_prog = max(student.intr_prog for student in team)
+    max_fan = max(student.intr_fab for student in team)
+    max_cad = max(student.intr_cad for student in team)
+
+    # If the best student handles each area, how deficient will the team be
+    deficient_elec = max(0, 4-max_elec)**2
+    deficient_prog = max(0, 4-max_prog)**2
+    deficient_fab = max(0, 4-max_fab)**2
+    deficient_cad = max(0, 4-max_cad)**2
+
+    # Basically computing the "distance" from complete sufficiency
+    overall_deficiency = np.sqrt(sum(
+        [deficient_elec, deficient_prog, deficient_fab, deficient_cad]
+    ))
+
+    # Max possible is 6, so noramlize to 0 -> 1
+    return overall_deficiency / 6
+
+
 def percent_strongly_skilled(team):
     '''
     Returns the percent of students on a team who are "strongly skilled" at 

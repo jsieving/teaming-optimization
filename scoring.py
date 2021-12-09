@@ -7,6 +7,8 @@ from helpers import (
     count_met_partner_prefs,
     count_mutual_partner_prefs,
     percent_strongly_skilled,
+    exp_deficiency,
+    intr_deficiency,
     skill_deficiency,
     sorted_topic_votes,
     violates_silver_bullets
@@ -19,6 +21,41 @@ def sample_score_func(teams):
         max_commitment = max([student.commitment for student in team])
         squared_errors_sum += (max_commitment - min_commitment) ** 2
     return np.sqrt(squared_errors_sum)
+
+
+def team_evaluation(team):
+    '''
+    Evaluate how good the algorithm has done on forming a specific team.
+    '''
+    # Determine if one student was a "filler student"
+    filler_students = 0
+    full_team_cohesion = count_met_partner_prefs(team)
+    for i, test_student in enumerate(team):
+        test_team = team[:i-1] + team[i+1:]
+        test_team_cohesion = count_met_partner_prefs(test_team)
+        # If the rest of the team is clique-ish
+        if test_team_cohesion >= perm(len(test_team), 2) * .75:
+            # But no additional preferences include test_student
+            if full_team_cohesion == test_team_cohesion:
+                # That student was probably a filler
+                filler_students += 1
+
+    odd_person_out = -1 if filler_students == 1 else 0
+
+    # Find deficiencies in technical areas
+    intr_defncy = intr_deficiency(team)
+    exp_defncy = exp_deficiency(team)
+    # Check if they are lacking a "good" (intr+exp > 8) PM
+    max_pm = max([student.mgmt for student in team])
+    pm_defncy = 1 - max(0, max_pm-8) / 8
+
+    # Return weighted cost
+    return np.sqrt(
+        (4 * odd_person_out) ** 2 +
+        (3 * pm_defncy) ** 2 + 
+        (2 * exp_defncy) ** 2 +
+        (2 * intr_defncy) ** 2
+    )
 
 
 def team_compatibility(team):
