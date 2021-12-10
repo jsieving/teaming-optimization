@@ -2,6 +2,8 @@
 Deals with importing data from survey results and converting to Student objects
 """
 import pandas as pd
+import networkx as nx
+import itertools as it
 from student import Student
 
 
@@ -60,3 +62,28 @@ def load_student_data(filename):
 
     students.sort(key=lambda student:student.name)
     return students
+
+
+def create_student_graph(students):
+    """
+    Given an iterable of Student objects, creates a graph connecting all students
+    except those that have a silver bullet between them
+
+    Arguments:
+        an iterable containing Student objects
+
+    Returns:
+        a networkx Graph object where the nodes are Student objects and the edges
+        are possible (non-silver-bulleted) connections
+    """
+    # add all the students as nodes in the graph
+    student_graph = nx.Graph()
+    student_graph.add_nodes_from(students)
+
+    # add edges between students that have no silver bullets between them
+    for student1, student2 in it.combinations(students, 2):
+        if not student1.dislikes(student2) and not student2.dislikes(student1):
+            student_graph.add_edge(student1, student2)
+
+    return student_graph
+
