@@ -34,16 +34,13 @@ class Student:
         self.exp_mech = (exp_cad + exp_fab) / 2
         self.mech = self.intr_mech + self.exp_mech
 
-
     def __repr__(self):
         return self.name
-
 
     def prefers(self, other_student):
         if other_student.name in self.preferences:
             return True
         return False
-
 
     def dislikes(self, other_student):
         if other_student.name in self.silver_bullets:
