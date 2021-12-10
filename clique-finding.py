@@ -3,6 +3,16 @@ from itertools import combinations
 
 
 def find_k_clique(graph, k):
+    """
+    Algorithm to find cliques of size-k in a graph
+
+    Arguments:
+        graph: a networkx Graph object
+        k: an integer representing the size of the cliques to find
+    
+    Return:
+        a list of networkx Graph objects representing cliques
+    """
     # can't have a k-clique in a k-1 graph
     if k > graph.number_of_nodes():
         return []
@@ -33,8 +43,8 @@ def find_k_clique(graph, k):
                 nodes = tuple(graph1.nodes | graph2.nodes)
 
                 if nodes not in clique_nodes:
-                    # make a new graph that's the combination of the two previous and add it to the list of cliques
-                    clique = nx.compose(graph1, graph2)
+                    # pull out the subgraph containing all the nodes in this clique and add it to the list of cliques
+                    clique = graph.subgraph(nodes)
                     next_k_cliques.append(clique)
                     # add the nodes to the set of clique nodes so we can easily eliminate duplicates
                     clique_nodes.add(nodes)
@@ -43,5 +53,4 @@ def find_k_clique(graph, k):
         next_k_cliques = []
 
     return cliques
-
 
