@@ -1,7 +1,5 @@
 import csv
 import os
-from posixpath import basename
-from typing import final
 
 
 def show_columns(data):
