@@ -66,11 +66,11 @@ def load_student_data(filename):
 
 def create_student_graph(students):
     """
-    Given an iterable of Student objects, creates a graph connecting all students
+    Given a list of Student objects, creates a graph connecting all students
     except those that have a silver bullet between them
 
     Arguments:
-        an iterable containing Student objects
+        a list containing Student objects
 
     Returns:
         a networkx Graph object where the nodes are Student objects and the edges
