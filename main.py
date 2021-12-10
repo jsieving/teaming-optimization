@@ -9,7 +9,6 @@ from scoring import (
     team_evaluation
 )
 
-
 filename = input("Enter file name with survey data [team_sample_data.csv]: ") or "team_sample_data.csv"
 
 students = load_student_data(filename)
@@ -35,12 +34,14 @@ students = load_student_data(filename)
 num_students = len(students)
 
 # Create a graph connecting non-silver-bulleted Student objects as vertices with edge weights representing compatibility
+all_student_graph = create_student_graph(students)
 
 # Figure out how many groups of 4 and 5 to create 
 num_5teams, num_4teams = num_size_teams(num_students)
 
 # Compute all 4-cliques and take the top n (computed in previous step) non-overlapping groups of size 4
-find_k_clique(graph, num_4teams)
+find_k_clique(all_student_graph, num_4teams)
+
 
 # Eliminate all people assigned in the 5-clique from possible candidates 
 
