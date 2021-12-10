@@ -1,6 +1,6 @@
-'''
+"""
 Functions for scoring team assignments on different metrics
-'''
+"""
 import numpy as np
 from math import comb, perm
 from helpers import (
@@ -24,9 +24,9 @@ def sample_score_func(teams):
 
 
 def team_evaluation(team):
-    '''
+    """
     Evaluate how good the algorithm has done on forming a specific team.
-    '''
+    """
     # Determine if one student was a "filler student"
     filler_students = 0
     full_team_cohesion = count_met_partner_prefs(team)
@@ -59,10 +59,10 @@ def team_evaluation(team):
 
 
 def team_compatibility(team):
-    '''
+    """
     Computes a score for 1 team.
     If any 2 students have silver bullet between them, returns 0.
-    '''
+    """
     if violates_silver_bullets(team):
         return 0
 
@@ -93,10 +93,10 @@ def team_compatibility(team):
 
 
 def compatibility(student1, student2):
-    '''
+    """
     Computes a compatibility score between 2 students.
     If students have silver bullet between them, returns -infinity.
-    '''
+    """
     if (student1.name in student2.silver_bullets or
         student2.name in student1.silver_bullets):
         return -float("inf")

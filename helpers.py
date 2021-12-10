@@ -3,9 +3,9 @@ import itertools
 
 
 def count_students(teams):
-    '''
+    """
     Counts the total number of students assigned in a list of teams.
-    '''
+    """
     total = 0
     for team in teams:
         total += len(team)
@@ -13,12 +13,12 @@ def count_students(teams):
 
 
 def sorted_teams(teams):
-    '''
+    """
     Sorts a list of team assignments in place and returns it.
 
     Each team is sorted alphabetically by student name. Then, all teams are
     sorted alphabetically by first-listed student name.
-    '''
+    """
     for team in teams:
         team.sort(key=lambda student:student.name)
     teams.sort(key=lambda team:team[0].name)
@@ -26,12 +26,12 @@ def sorted_teams(teams):
 
 
 def num_size_teams(num_students):
-    '''
+    """
     Takes in a number of students and calculate how many 4 and 5 person teams
     they should be on.
 
     Returns a tuple of (5-person teams, 4-person teams).
-    '''
+    """
     # Nonsensical math to figure out how many students on each team
     reqd_teams = min(np.ceil(num_students / 5),
                     np.floor(num_students / 4))
@@ -43,10 +43,10 @@ def num_size_teams(num_students):
 
 
 def violates_silver_bullets(team):
-    '''
+    """
     Checks if there is a silver bullet for any student in a list from any other
     student in the list.
-    '''
+    """
     all_silver_bullets = set()
     # Merge silver bullets of all team members
     for student in team:
@@ -58,7 +58,7 @@ def violates_silver_bullets(team):
 
 
 def count_met_partner_prefs(team):
-    '''
+    """
     Counts the number of instances where a student on a team had requested to
     work with another student on that team.
 
@@ -70,7 +70,7 @@ def count_met_partner_prefs(team):
     and Carol, that gets a 2.
 
     If Alice, Bob and Carol all mutually rquested each other, that gets a 6.
-    '''
+    """
     all_preferences = {}  # students who are some # of teammates' preference
     met_partner_prefs = 0  # 1 point for each preference if they're on the team
 
@@ -88,7 +88,7 @@ def count_met_partner_prefs(team):
 
 
 def count_mutual_partner_prefs(team):
-    '''
+    """
     Counts the number of instances where two students on a team both requested
     to work with each other.
 
@@ -97,7 +97,7 @@ def count_mutual_partner_prefs(team):
     If Alice and Bob both requested each other, that gets a 1.
 
     If Alice, Bob and Carol all mutually rquested each other, that gets a 3.
-    '''
+    """
     mutual_partner_prefs = 0
     for studentA, studentB in itertools.combinations(team, 2):
         if studentA.prefers(studentB) and studentB.prefers(studentA):
@@ -107,7 +107,7 @@ def count_mutual_partner_prefs(team):
 
 
 def skill_deficiency(team):
-    '''
+    """
     Calculates how much a team is lacking overall in 4 key areas:
     management, electrical, programming, and mechanical (CAD + fabrication).
 
@@ -124,7 +124,7 @@ def skill_deficiency(team):
     having at least 8 in each area, with each area treated like a dimension.
     **This means that having a small deficiency in several areas is better than
     having a big deficiency in 1 area.**
-    '''
+    """
     # Find out how good (interested + experienced) the best student on the team
     # is for each area
     max_mgmt = max(student.mgmt for student in team)
@@ -148,14 +148,14 @@ def skill_deficiency(team):
 
 
 def exp_deficiency(team):
-    '''
+    """
     Like skill_deficiency, but focuses only on experience for technical areas.
-    '''
+    """
     # Find out how good (interested + experienced) the best student on the team
     # is for each area
     max_elec = max(student.exp_elec for student in team)
     max_prog = max(student.exp_prog for student in team)
-    max_fan = max(student.exp_fab for student in team)
+    max_fab = max(student.exp_fab for student in team)
     max_cad = max(student.exp_cad for student in team)
 
     # If the best student handles each area, how deficient will the team be
@@ -174,14 +174,14 @@ def exp_deficiency(team):
 
 
 def intr_deficiency(team):
-    '''
+    """
     Like skill_deficiency, but focuses only on interest for technical areas.
-    '''
+    """
     # Find out how good (interested + experienced) the best student on the team
     # is for each area
     max_elec = max(student.intr_elec for student in team)
     max_prog = max(student.intr_prog for student in team)
-    max_fan = max(student.intr_fab for student in team)
+    max_fab = max(student.intr_fab for student in team)
     max_cad = max(student.intr_cad for student in team)
 
     # If the best student handles each area, how deficient will the team be
@@ -200,7 +200,7 @@ def intr_deficiency(team):
 
 
 def percent_strongly_skilled(team):
-    '''
+    """
     Returns the percent of students on a team who are "strongly skilled" at 
     something.
 
@@ -213,7 +213,7 @@ def percent_strongly_skilled(team):
 
     If any student does not have a particular strong skill, this will return
     less than 1.
-    '''
+    """
     good_mgmt_students = filter(lambda student: student.mgmt >= 8, team)
     good_elec_students = filter(lambda student: student.elec >= 8, team)
     good_prog_students = filter(lambda student: student.prog >= 8, team)
@@ -227,7 +227,7 @@ def percent_strongly_skilled(team):
 
 
 def sorted_topic_votes(team):
-    '''
+    """
     Returns a list of the numbers of students who voted for different topics,
     sorted by number of votes.
 
@@ -238,7 +238,7 @@ def sorted_topic_votes(team):
     By taking the first n items from the output, another function could figure
     out how much agreement there can be on the project topic if n topics could
     be incorporated into the project.
-    '''
+    """
     all_topics = {} # topics liked by some # of students
 
     # Count up votes for each candidate topic
