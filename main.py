@@ -1,5 +1,5 @@
 from assignments import random_assignments
-from data_loader import load_student_data
+from data_loader import load_student_data, create_student_graph
 from helpers import num_size_teams
 from clique-finding import find_k_clique
 from scoring import (
@@ -40,7 +40,7 @@ all_student_graph = create_student_graph(students)
 num_5teams, num_4teams = num_size_teams(num_students)
 
 # Compute all 4-cliques and take the top n (computed in previous step) non-overlapping groups of size 4
-find_k_clique(all_student_graph, num_4teams)
+four_cliques = find_k_clique(all_student_graph, num_4teams)
 
 
 # Eliminate all people assigned in the 5-clique from possible candidates 
