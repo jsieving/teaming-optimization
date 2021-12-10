@@ -39,9 +39,16 @@ all_student_graph = create_student_graph(students)
 # Figure out how many groups of 4 and 5 to create 
 num_5teams, num_4teams = num_size_teams(num_students)
 
-# Compute all 4-cliques and take the top n (computed in previous step) non-overlapping groups of size 4
-four_cliques = find_k_clique(all_student_graph, num_4teams)
+# Compute all 4-cliques
+four_cliques = find_k_clique(all_student_graph, 4)
 
+# Find team comptability of each clique
+
+# Check overlap of students on top teams
+
+# Take top n
+
+# Rerun if we don't have enough 4-teams yet
 
 # Eliminate all people assigned in the 5-clique from possible candidates 
 
