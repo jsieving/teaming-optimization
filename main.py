@@ -1,7 +1,7 @@
 from assignments import random_assignments
 from data_loader import load_student_data
 from helpers import num_size_teams
-from clique-finding import find_k_clique
+from clique_finding import find_k_clique
 from scoring import (
     compatibility,
     sample_score_func,
