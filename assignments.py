@@ -1,18 +1,18 @@
-'''
+"""
 Functions which take in a list of students and produce a team assignment
-'''
+"""
 from random import shuffle
 from copy import copy, deepcopy
 from helpers import count_students, num_size_teams, sorted_teams
 
 def random_assignments(students, prior_teams=None):
-    '''
+    """
     Randomly assign Students into teams of 4 or 5.
 
     Optionally provide pre-formed teams or partial teams, and these will be
     copied and filled up with 4 or 5 students each.
     May use as a baseline for scoring another algorithm.
-    '''
+    """
     # Count total students and return unchanged input if not enough for a team
     teams = deepcopy(prior_teams) or []
     total_students = len(students) + count_students(teams)
