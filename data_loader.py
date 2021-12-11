@@ -60,7 +60,7 @@ def load_student_data(filename):
         )
         students.append(s)
 
-    students.sort(key=lambda student:student.name)
+    students.sort(key=lambda student: student.name)
     return students
 
 
