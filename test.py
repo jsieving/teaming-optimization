@@ -7,11 +7,11 @@ graph1.add_node("b")
 graph1.add_node("c")
 
 graph2 = nx.Graph()
-graph2.add_node("a")
-graph2.add_node("b")
-graph2.add_node("c")
+graph2.add_node("e")
+graph2.add_node("f")
+graph2.add_node("g")
 
-does_overlap = overlaps(graph1,graph2)
+does_overlap = overlaps(graph1.nodes(),graph2.nodes())
 
 print("overlaps:")
 print(does_overlap)

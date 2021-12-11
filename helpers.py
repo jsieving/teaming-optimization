@@ -257,9 +257,9 @@ def sorted_topic_votes(team):
 
     return sorted(all_topics.values(), reverse=True)
 
-def overlaps(clique1, clique2):
+def overlaps(nodes1, nodes2):
     """
-    Returns True if the cliques share a common node, False if not.
+    Returns True if the two sets of nodes share at least 1 common node, False if not.
     """
-    # if cardinality of intersection of the cliques is > 0, the cliques overlap
-    return bool(len((clique1.nodes & clique2.nodes)))
+    # if cardinality of intersection of the node-sets is > 0, the node-sets overlap
+    return bool(len((nodes1 & nodes2)))
