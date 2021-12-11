@@ -39,7 +39,7 @@ all_student_graph = create_student_graph(students)
 # Figure out how many groups of 4 and 5 to create 
 num_5teams, num_4teams = num_size_teams(num_students)
 
-# Compute all 4-cliques
+# Compute all possible 4-cliques
 four_cliques = find_k_clique(all_student_graph, 4)
 
 # Find team comptability of each clique
