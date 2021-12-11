@@ -111,6 +111,8 @@ def skill_deficiency(team):
     Calculates how much a team is lacking overall in 4 key areas:
     management, electrical, programming, and mechanical (CAD + fabrication).
 
+    Returns value from 0 (good) to 1 (bad).
+
     Assumes that the team's ability in an area is equal to the ability of
     the strongest student in that area. Currently this is the sum of interest
     and experience, and a score of 8 is considered to be completely sufficient
@@ -143,13 +145,15 @@ def skill_deficiency(team):
         [deficient_mgmt, deficient_elec, deficient_prog, deficient_mech]
     ))
 
-    # Max possible is 12, so noramlize to 0 -> 1
+    # Max possible is 12, so noramlize to 0 (good) -> 1 (bad)
     return overall_deficiency / 12
 
 
 def exp_deficiency(team):
     """
     Like skill_deficiency, but focuses only on experience for technical areas.
+
+    Returns value from 0 (good) to 1 (bad).
     """
     # Find out how good (interested + experienced) the best student on the team
     # is for each area
@@ -169,13 +173,15 @@ def exp_deficiency(team):
         [deficient_elec, deficient_prog, deficient_fab, deficient_cad]
     ))
 
-    # Max possible is 6, so noramlize to 0 -> 1
+    # Max possible is 6, so noramlize to 0 (good) -> 1 (bad)
     return overall_deficiency / 6
 
 
 def intr_deficiency(team):
     """
     Like skill_deficiency, but focuses only on interest for technical areas.
+
+    Returns value from 0 (good) to 1 (bad).
     """
     # Find out how good (interested + experienced) the best student on the team
     # is for each area
@@ -195,7 +201,7 @@ def intr_deficiency(team):
         [deficient_elec, deficient_prog, deficient_fab, deficient_cad]
     ))
 
-    # Max possible is 6, so noramlize to 0 -> 1
+    # Max possible is 6, so noramlize to 0 (good) -> 1 (bad)
     return overall_deficiency / 6
 
 
@@ -203,6 +209,8 @@ def percent_strongly_skilled(team):
     """
     Returns the percent of students on a team who are "strongly skilled" at 
     something.
+
+    Returns value from 0 (bad) to 1 (good).
 
     "Strongly skilled" is defined as having a total score of 8 or more in
     combined interest and experience.
@@ -223,6 +231,7 @@ def percent_strongly_skilled(team):
         good_prog_students, good_mech_students
     )
 
+    # Noramlize to 0 (good) -> 1 (bad)
     return len(specialized_students) / len(team)
 
 
