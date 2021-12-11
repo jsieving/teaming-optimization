@@ -45,10 +45,13 @@ four_cliques = find_k_clique(all_student_graph, 4)
 # Find team comptability of each clique
 for team in four_cliques:
     # compute team compatibility and store as a property of the graph
-    team(compatibility=team_compatibility(team.nodes))
+    team.graph[compatibility] = team_compatibility(team.nodes)
 
 # sort the cliques by highest compability scores
 four_cliques.sort(key=lambda team: team.compability)
+
+for team in four_cliques:
+    print(team, team.compability)
 
 # Check overlap of students on top teams
 
