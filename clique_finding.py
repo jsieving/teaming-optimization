@@ -44,7 +44,7 @@ def find_k_clique(graph, k):
 
                 if nodes not in clique_nodes:
                     # pull out the subgraph containing all the nodes in this clique and add it to the list of cliques
-                    clique = graph.subgraph(nodes)
+                    clique = graph.subgraph(nodes).copy()
                     next_k_cliques.append(clique)
                     # add the nodes to the set of clique nodes so we can easily eliminate duplicates
                     clique_nodes.add(nodes)

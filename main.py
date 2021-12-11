@@ -42,16 +42,17 @@ num_5teams, num_4teams = num_size_teams(num_students)
 # Compute all possible 4-cliques
 four_cliques = find_k_clique(all_student_graph, 4)
 
-# Find team comptability of each clique
+# Find team compatability of each clique
 for team in four_cliques:
     # compute team compatibility and store as a property of the graph
-    team.graph[compatibility] = team_compatibility(team.nodes)
+    team.graph['compat'] = team_compatibility(team.nodes)
 
-# sort the cliques by highest compability scores
-four_cliques.sort(key=lambda team: team.compatibility)
+# sort the cliques by highest compatibility scores
+four_cliques = [team for team in four_cliques if team.graph['compat'] > 0]
+four_cliques.sort(key=lambda team: team.graph['compat'], reverse=True)
 
 for team in four_cliques:
-    print(team, team.compatibility)
+    print(team, team.graph)
 
 # Check overlap of students on top teams
 
