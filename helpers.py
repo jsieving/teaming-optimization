@@ -256,3 +256,10 @@ def sorted_topic_votes(team):
             all_topics[topic] = all_topics.get(topic, 0) + 1
 
     return sorted(all_topics.values(), reverse=True)
+
+def overlaps(clique1, clique2):
+    """
+    Returns True if the cliques share a common node, False if not.
+    """
+    # if cardinality of intersection of the cliques is > 0, the cliques overlap
+    return bool(len((clique1.nodes & clique2.nodes)))
