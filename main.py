@@ -48,7 +48,7 @@ for team in four_cliques:
     team.graph[compatibility] = team_compatibility(team.nodes)
 
 # sort the cliques by highest compability scores
-four_cliques.sort(key=lambda team: team.compability)
+four_cliques.sort(key=lambda team: team.compatibility)
 
 for team in four_cliques:
     print(team, team.compability)
