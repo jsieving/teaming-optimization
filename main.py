@@ -51,7 +51,7 @@ for team in four_cliques:
 four_cliques.sort(key=lambda team: team.compatibility)
 
 for team in four_cliques:
-    print(team, team.compability)
+    print(team, team.compatibility)
 
 # Check overlap of students on top teams
 
