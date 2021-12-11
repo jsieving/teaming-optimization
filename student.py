@@ -37,6 +37,12 @@ class Student:
     def __repr__(self):
         return self.name
 
+    def __hash__(self):
+        return hash(self.name)
+
+    def __eq__(self, other):
+        return self.name == other.name
+
     def prefers(self, other_student):
         if other_student.name in self.preferences:
             return True
