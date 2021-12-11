@@ -26,6 +26,8 @@ def sample_score_func(teams):
 def team_evaluation(team):
     """
     Evaluate how good the algorithm has done on forming a specific team.
+
+    Returns a cost value where lower is better and higher is worse.
     """
     # Determine if one student was a "filler student"
     filler_students = 0
@@ -40,16 +42,19 @@ def team_evaluation(team):
                 # That student was probably a filler
                 filler_students += 1
 
-    odd_person_out = -1 if filler_students == 1 else 0
+    # 0 (good) -> 1 (bad)
+    odd_person_out = 1 if filler_students == 1 else 0
 
     # Find deficiencies in technical areas
     intr_defncy = intr_deficiency(team)
     exp_defncy = exp_deficiency(team)
     # Check if they are lacking a "good" (intr+exp > 8) PM
     max_pm = max([student.mgmt for student in team])
-    pm_defncy = 1 - max(0, max_pm-8) / 8
+    # 0 (good) -> 1 (bad)
+    pm_defncy = 1 - max(0, 8-max_pm) / 8
 
     # Return weighted cost
+    # Lower (good) -> higher (bad)
     return np.sqrt(
         (4 * odd_person_out) ** 2 +
         (3 * pm_defncy) ** 2 + 
@@ -68,13 +73,14 @@ def team_compatibility(team):
 
     # Evaluate team on commitment, topic agreement, partner prefs,
     # skill deficiency & skill distribution
+    # Variance is lower -> better
     commitment_variance = np.var([student.commitment for student in team])
     topic_votes = sorted_topic_votes(team)
     num_topics_considered = max(2, len(topic_votes))
-    top_2_topic_votes = sum(topic_votes[:2])
-    met_partner_prefs = count_met_partner_prefs(team)
-    skill_defncy = skill_deficiency(team)
-    skill_distribution = percent_strongly_skilled(team)
+    top_2_topic_votes = sum(topic_votes[:2])  # Higher -> better
+    met_partner_prefs = count_met_partner_prefs(team)  # Higher -> better
+    skill_defncy = skill_deficiency(team)  # 0 (good) -> 1 (bad)
+    skill_distribution = percent_strongly_skilled(team)  # 0 (bad) -> 1 (good)
 
     # Normalize all values to be 0 (worst possible) -> 1 (best possible)
     scaled_commitment = (4 - commitment_variance) / 4
