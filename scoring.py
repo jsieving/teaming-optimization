@@ -23,6 +23,17 @@ def sample_score_func(teams):
     return np.sqrt(squared_errors_sum)
 
 
+def assignment_cost(teams):
+    """
+    Calculate the overall cost (badness) of a selection of teams.
+
+    Returns a cost value where lower is better and higher is worse.
+    """
+    costs = [team_evaluation(list(clique.nodes))
+             for clique in teams]
+    return np.sqrt(sum(costs))
+
+
 def team_evaluation(team):
     """
     Evaluate how good the algorithm has done on forming a specific team.
