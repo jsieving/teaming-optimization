@@ -3,7 +3,7 @@ import time
 from networkx.classes import graph
 from assignments import (
     assign_teams_greedy, assign_teams_random, assign_teams_rec)
-from helpers import num_size_teams
+from helpers import list_met_partner_prefs, num_size_teams, sorted_topics
 from clique_finding import find_k_clique
 from scoring import (
     assignment_cost, team_compatibility, team_evaluation)
@@ -31,11 +31,19 @@ except FileNotFoundError:
     four_cliques = find_k_clique(student_graph, 4)
     print("%i 4-cliques found." % len(four_cliques))
 
+    # Find team compatability of each 4-clique
+    for team in four_cliques:
+        # Compute team compatibility and store as a property of the graph
+        team.graph['compat'] = team_compatibility(team.nodes)
+
     # Do not save any cliques containing silver bullets
     # They shouldn't make it this far, but checking can save a lot of time
     four_cliques = [
         team for team in four_cliques if team.graph['compat'] > 0]
     print("%i nonzero 4-cliques found." % len(four_cliques))
+
+    # sort the cliques by highest compatibility scores
+    four_cliques.sort(key=lambda team: team.graph['compat'], reverse=True)
 
     joblib.dump(four_cliques, four_cliques_filename)
     print("4-cliques saved in", four_cliques_filename)
@@ -51,11 +59,19 @@ except FileNotFoundError:
     five_cliques = find_k_clique(student_graph, 5)
     print("%i 5-cliques found." % len(five_cliques))
 
+    # Find team compatability of each 5-clique
+    for team in five_cliques:
+        # Compute team compatibility and store as a property of the graph
+        team.graph['compat'] = team_compatibility(team.nodes)
+
     # Do not save any cliques containing silver bullets
     # They shouldn't make it this far, but checking can save a lot of time
     five_cliques = [
         team for team in five_cliques if team.graph['compat'] > 0]
     print("%i nonzero 5-cliques found." % len(five_cliques))
+
+    # sort the cliques by highest compatibility scores
+    five_cliques.sort(key=lambda team: team.graph['compat'], reverse=True)
 
     joblib.dump(five_cliques, five_cliques_filename)
     print("5-cliques saved in", five_cliques_filename)
@@ -84,26 +100,57 @@ num_5teams, num_4teams = num_size_teams(num_students)
 print("Students: %i; 4-teams: %i; 5-teams: %i" %
       (num_students, num_4teams, num_5teams))
 
-# print("Running random assignments...")
-# rand_teams = assign_teams_random(
-#     four_cliques, five_cliques, num_4teams, num_5teams)
-# print("Cost: (lower is better): %.3f" % assignment_cost(rand_teams))
-# for team in rand_teams:
-#     print(team.nodes, "\tCompat: %.2f; Eval: %.2f" %
-#           (team_compatibility(team), team_evaluation(team)))
+print("Running random assignments...")
+rand_teams = assign_teams_random(
+    four_cliques, five_cliques, num_4teams, num_5teams)
+print("Cost: (lower is better): %.3f" % assignment_cost(rand_teams))
+for team in rand_teams:
+    print("\nCompat: %.2f Eval: %.2f" %
+          (team.graph['compat'], team_evaluation(team)))
+    for student in team.nodes:
+        print("%s: %i/%i, %i/%i, %i/%i, %i/%i, %i/%i, %i" % (
+            student.name,
+            student.intr_mgmt, student.exp_mgmt,
+            student.intr_prog, student.exp_prog,
+            student.intr_elec, student.exp_elec,
+            student.intr_cad, student.exp_cad,
+            student.intr_fab, student.exp_fab,
+            student.commitment
+        ))
+    print(sorted_topics(team)[:3])
+    print(list_met_partner_prefs(team))
 
 
-# print("Running greedy...")
-# # Greedily assign required numbers of teams of 4 and 5
-# greedy_teams = assign_teams_greedy(
-#     four_cliques, five_cliques, num_4teams, num_5teams)
-# print("Cost: (lower is better): %.3f" % assignment_cost(greedy_teams))
-# for team in greedy_teams:
-#     print(team.nodes, "\tCompat: %.2f Eval: %.2f" %
-#           (team.graph['compat'], team_evaluation(team)))
+print("Running greedy...")
+# Greedily assign required numbers of teams of 4 and 5
+# Set "best" cost yet to a very high (bad) value
+best_greedy_teams, best_greedy_cost = None, 1000
+for i in range(10):
+    greedy_teams = assign_teams_greedy(
+        four_cliques[i:], five_cliques, num_4teams, num_5teams)
+    cost = assignment_cost(greedy_teams)
+    if cost < best_greedy_cost:
+        best_greedy_cost = cost
+        best_greedy_teams = greedy_teams
 
+print("Cost: (lower is better): %.3f" % best_greedy_cost)
+for team in best_greedy_teams:
+    print("\nCompat: %.2f Eval: %.2f" %
+          (team.graph['compat'], team_evaluation(team)))
+    for student in team.nodes:
+        print("%s: %i/%i, %i/%i, %i/%i, %i/%i, %i/%i, %i" % (
+            student.name,
+            student.intr_mgmt, student.exp_mgmt,
+            student.intr_prog, student.exp_prog,
+            student.intr_elec, student.exp_elec,
+            student.intr_cad, student.exp_cad,
+            student.intr_fab, student.exp_fab,
+            student.commitment
+        ))
+    print(sorted_topics(team)[:3])
+    print(list_met_partner_prefs(team))
 
-print("Running recursive backtracking...")
+# print("Running recursive backtracking...")
 
 # # Demote 4-cliques so 5s will be chosen first
 # for team in four_cliques:
@@ -113,10 +160,10 @@ print("Running recursive backtracking...")
 # all_cliques = five_cliques + four_cliques
 # all_cliques.sort(key=lambda team: team.graph['compat'], reverse=True)
 
-cost, teams = assign_teams_rec(
-    four_cliques[:10000], five_cliques[:10000], 0, [], set(), num_students, num_5teams+num_4teams)
+# cost, teams = assign_teams_rec(
+    #     four_cliques[:10000], five_cliques[:10000], 0, [], set(), num_students, num_5teams+num_4teams)
 
-print("Cost: (lower is better): %.3f" % cost)
-for team in teams:
-    print(team.nodes, "\tCompat: %.2f Eval: %.2f" %
-          (team.graph['compat'], team_evaluation(team)))
+    # print("Cost: (lower is better): %.3f" % cost)
+    # for team in teams:
+    #     print(team.nodes, "\tCompat: %.2f Eval: %.2f" %
+    #           (team.graph['compat'], team_evaluation(team)))
