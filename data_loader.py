@@ -1,9 +1,12 @@
 """
 Deals with importing data from survey results and converting to Student objects
 """
-import pandas as pd
-import networkx as nx
 import itertools as it
+import joblib
+import networkx as nx
+import pandas as pd
+import random
+from copy import deepcopy
 from student import Student
 
 
@@ -11,52 +14,50 @@ def load_student_data(filename):
     data = pd.read_csv(filename)
     students = []
 
-    # Each row represents a student
-    for index, row in data.iterrows():
-        # Need to combine data from multiple columns for these fields
-        silver_bullet_cols = ["Silver Bullet #1", "Silver Bullet #2"]
-        preference_cols = ["Preference #2",
-                            "Preference #3",
-                            "Preference #4",
-                            "Preference #5",
-                            "Preference #6"]
-        silver_bullets = set()
-        preferences = set()
+    num_students = len(data)
+    commitments = random.choices(
+        range(1, 6), weights=[1, 3, 4, 3, 1.5], k=num_students)
 
-        for col_name in silver_bullet_cols:
-            sb = row[col_name]
-            if str(sb) != "nan":
-                silver_bullets.add(sb)
-        
-        for col_name in preference_cols:
-            pref = row[col_name]
-            if str(pref) != "nan":
-                preferences.add(pref)
+    # Each row represents a student
+    for idx, row in data.iterrows():
+        anti_prefs = row["AntiPrefs"]
+        if str(anti_prefs) != "nan":
+            silver_bullets = set([sb.strip()
+                                 for sb in str(anti_prefs).split(";")])
+        else:
+            silver_bullets = set()
+
+        prefs = row["Prefs"]
+        if str(prefs) != "nan":
+            preferences = set([pref.strip() for pref in str(prefs).split(";")])
+        else:
+            preferences = set()
 
         # Convert interests to set
-        interests = row["Category interests (comma separated categories)"]
-        if str(interests) != "nan":
-            interests = {intr.strip() for intr in interests.split(",")}
+        topics = row["ProjTopics"]
+        if str(topics) != "nan":
+            interests = set([intr.strip() for intr in topics.split(",")])
         else:
             interests = set()
 
         # Create student and add to list
         s = Student(
-            name=row["Name"],
-            commitment=row["Commitment (meet req -> beyond)"],
+            name=row["Student"],
+            pronouns=row["Pronouns"],
+            commitment=commitments[idx],
             interests=interests,
             preferences=preferences,
             silver_bullets=silver_bullets,
-            intr_mgmt=row["Mgmt intr."],
-            exp_mgmt=row["Mgmt exp."],
-            intr_elec=row["Elex intr."],
-            exp_elec=row["Elex exp."],
-            intr_prog=row["Prog intr."],
-            exp_prog=row["Prog exp."],
-            intr_cad=row["CAD intr."],
-            exp_cad=row["CAD exp."],
-            intr_fab=row["Fab intr."],
-            exp_fab=row["Fab exp."],
+            intr_mgmt=row["IntLeadership"],
+            exp_mgmt=row["ExpLeadership"],
+            intr_elec=row["IntElecProto"],
+            exp_elec=row["ExpElecProto"],
+            intr_prog=row["IntProg"],
+            exp_prog=row["ExpProg"],
+            intr_cad=row["IntMechCAD"],
+            exp_cad=row["ExpMechCAD"],
+            intr_fab=row["IntMechFab"],
+            exp_fab=row["ExpMechFab"],
         )
         students.append(s)
 
@@ -87,3 +88,32 @@ def create_student_graph(students):
 
     return student_graph
 
+
+if __name__ == "__main__":
+    survey_file_suffix = input(
+        "Enter suffix for survey data filename: anonymized_surveys_")
+    survey_filename = "data/anonymized_surveys_" + survey_file_suffix + ".csv"
+
+    # Parse data from survey to create Student objects
+    try:
+        students = load_student_data(survey_filename)
+    except FileNotFoundError:
+        print("File %s not found. Please check your working folder and spelling." %
+              survey_filename)
+        exit()
+    print("Students loaded: ", len(students))
+
+    for i in range(3):
+        students_sample = deepcopy(random.sample(
+            students, random.randint(20, 24)))
+        students_sample.sort(key=lambda student: student.name)
+
+        # Create the graph from the previously-loaded students, connecting
+        # non-silver-bulleted Student objects as vertices # with edge weights
+        # representing compatibility
+        sample_student_graph = create_student_graph(students_sample)
+        graph_filename = "data/student_graph_" + survey_file_suffix + str(i)
+        joblib.dump(sample_student_graph, graph_filename)
+        print("Saving", graph_filename)
+
+    print("Created 3 sample student graphs.")

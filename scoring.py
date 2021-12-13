@@ -29,8 +29,13 @@ def assignment_cost(teams):
 
     Returns a cost value where lower is better and higher is worse.
     """
-    costs = [team_evaluation(list(clique.nodes))
+    try:
+        # Assume it's a list of subgraphs
+        costs = [team_evaluation(list(clique.nodes))
              for clique in teams]
+    except:
+        # Catch if it's a list of lists
+        costs = [team_evaluation(team) for team in teams]
     return np.sqrt(sum(costs))
 
 
