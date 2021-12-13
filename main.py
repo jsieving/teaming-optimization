@@ -22,7 +22,8 @@ for i in range(3, 6):
     try:
         student_graph = joblib.load(student_graph_filename)
     except FileNotFoundError:
-        print("File '%s' not found. Please run data_loader.py to generate student graphs.")
+        print("File '%s' not found. Please run data_loader.py to generate student graphs." %
+              student_graph_filename)
         exit()
 
     # Load or create all 4-cliques
