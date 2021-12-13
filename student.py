@@ -1,9 +1,10 @@
 class Student:
-    def __init__(self, name, commitment=0, interests=None, preferences=None, silver_bullets=None,
+    def __init__(self, name, pronouns, commitment=0, interests=None, preferences=None, silver_bullets=None,
                  intr_mgmt=0, exp_mgmt=0, intr_elec=0, exp_elec=0, intr_prog=0, exp_prog=0,
                  intr_cad=0, exp_cad=0, intr_fab=0, exp_fab=0):
         
         self.name = name
+        self.pronouns = pronouns
         self.commitment = commitment
         self.interests = interests or set()
 
