@@ -37,10 +37,16 @@ def team_evaluation(team):
 
     Returns a cost value where lower is better and higher is worse.
     """
+    try:
+        # Assume it's a subgraph
+        team = list(team.nodes)
+    except:
+        # Continue if it's a list
+        pass
     # Determine if one student was a "filler student"
     filler_students = 0
     full_team_cohesion = count_met_partner_prefs(team)
-    for i, test_student in enumerate(team):
+    for i in range(len(team)):
         test_team = team[:i-1] + team[i+1:]
         test_team_cohesion = count_met_partner_prefs(test_team)
         # If the rest of the team is clique-ish
@@ -76,6 +82,13 @@ def team_compatibility(team):
     Computes a score for 1 team.
     If any 2 students have silver bullet between them, returns 0.
     """
+    try:
+        # Assume it's a subgraph
+        team = list(team.nodes)
+    except:
+        # Continue if it's a list
+        pass
+
     if violates_silver_bullets(team):
         return 0
 
