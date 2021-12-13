@@ -35,33 +35,20 @@ for i in range(3, 6):
     except FileNotFoundError:
         print(four_cliques_filename, "not found. Generating 4-cliques...")
         # Compute all possible 4-cliques
-        timer = time.time()
         four_cliques = find_k_clique(student_graph, 4)
-        elapsed = time.time() - timer
         print("%i 4-cliques found." % len(four_cliques))
-        print(elapsed)
 
         # Find team compatability of each clique
-        timer = time.time()
         for team in four_cliques:
             # compute team compatibility and store as a property of the graph
             team.graph['compat'] = team_compatibility(team.nodes)
-        elapsed = time.time() - timer
-        print("All cliques scored.")
-        print(elapsed)
 
         # sort the cliques by highest compatibility scores
-        timer = time.time()
         four_cliques = [
             team for team in four_cliques if team.graph['compat'] > 0]
-        elapsed = time.time() - timer
         print("%i nonzero 4-cliques found." % len(four_cliques))
-        print(elapsed)
-        timer = time.time()
+
         four_cliques.sort(key=lambda team: team.graph['compat'], reverse=True)
-        elapsed = time.time() - timer
-        print("All cliques sorted.")
-        print(elapsed)
 
         joblib.dump(four_cliques, four_cliques_filename)
         print("4-cliques saved in", four_cliques_filename)
@@ -75,33 +62,19 @@ for i in range(3, 6):
     except FileNotFoundError:
         print(five_cliques_filename, "not found. Generating 5-cliques...")
         # Compute all possible 5-cliques
-        timer = time.time()
         five_cliques = find_k_clique(student_graph, 5)
-        elapsed = time.time() - timer
         print("%i 5-cliques found." % len(five_cliques))
-        print(elapsed)
 
         # Find team compatability of each clique
-        timer = time.time()
         for team in five_cliques:
             # compute team compatibility and store as a property of the graph
             team.graph['compat'] = team_compatibility(team.nodes)
-        elapsed = time.time() - timer
-        print("All cliques scored.")
-        print(elapsed)
 
         # sort the cliques by highest compatibility scores
-        timer = time.time()
         five_cliques = [
             team for team in five_cliques if team.graph['compat'] > 0]
-        elapsed = time.time() - timer
         print("%i nonzero 5-cliques found." % len(five_cliques))
-        print(elapsed)
-        timer = time.time()
         five_cliques.sort(key=lambda team: team.graph['compat'], reverse=True)
-        elapsed = time.time() - timer
-        print("All cliques sorted.")
-        print(elapsed)
 
         joblib.dump(five_cliques, five_cliques_filename)
         print("5-cliques saved in", five_cliques_filename)
