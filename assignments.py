@@ -60,6 +60,9 @@ def assign_teams_random(four_cliques, five_cliques, n_4, n_5):
     shuffle(four_cliques)
     shuffle(five_cliques)
 
+    # Define this here in case no 4-cliques are needed
+    assigned_students = set()
+
     teams_of_5 = []
     start_at = 0
     while len(teams_of_5) < n_5:
