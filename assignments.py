@@ -26,9 +26,6 @@ def assign_teams_greedy(four_cliques, five_cliques, n_4, n_5):
             team_idx += 1
         start_at += 1
 
-    if not five_cliques:
-        return assignment_cost(teams_of_4), teams_of_4
-
     prev_assigned_students = set(assigned_students)
 
     teams_of_5 = []

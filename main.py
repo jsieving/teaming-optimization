@@ -95,14 +95,14 @@ for team in rand_teams:
           (team_compatibility(team), team_evaluation(team)))
 
 
-# print("All teams loaded. Running greedy..")
-# # Greedily assign required numbers of teams of 4 and 5
-# cost, teams = assign_teams_greedy(
-#     four_cliques, five_cliques, num_4teams, num_5teams)
-# print("Cost: (lower is better): %.3f" % cost)
-# for team in teams:
-#     print(team.nodes, "\tCompat: %.2f Eval: %.2f" %
-#           (team, graph["compat"], team_evaluation(team.nodes)))
+print("Running greedy...")
+# Greedily assign required numbers of teams of 4 and 5
+greedy_teams = assign_teams_greedy(
+    four_cliques, five_cliques, num_4teams, num_5teams)
+print("Cost: (lower is better): %.3f" % assignment_cost(greedy_teams))
+for team in greedy_teams:
+    print(team.nodes, "\tCompat: %.2f Eval: %.2f" %
+          (team.graph['compat'], team_evaluation(team)))
 
 
 # print("Running recursive backtracking...")
