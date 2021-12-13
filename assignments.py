@@ -1,5 +1,5 @@
 """
-Functions which take in a list of students and produce a team assignment
+Functions which produce complete team assignments
 """
 import numpy as np
 from random import shuffle

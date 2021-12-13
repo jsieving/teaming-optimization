@@ -1,14 +1,11 @@
 import joblib
 import time
 from networkx.classes import graph
-from assignments import assign_teams_greedy, random_assignments, assign_teams
-from data_loader import load_student_data, create_student_graph
+from assignments import assign_teams_greedy, assign_teams_random, assign_teams
 from helpers import num_size_teams
 from clique_finding import find_k_clique
 from scoring import (
     assignment_cost,
-    compatibility,
-    sample_score_func,
     team_compatibility,
     team_evaluation
 )
@@ -80,8 +77,8 @@ for i in range(3, 6):
         print("5-cliques saved in", five_cliques_filename)
 
 
-# print("All teams loaded. Running random assignments..")
-# _, rand_teams = random_assignments(students)
+print("All teams loaded. Running random assignments..")
+_, rand_teams = assign_teams_random(students)
 
 # print("Cost: (lower is better): %.3f" % assignment_cost(rand_teams))
 # for team in rand_teams:
