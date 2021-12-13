@@ -36,7 +36,7 @@ def load_student_data(filename):
         # Convert interests to set
         topics = row["ProjTopics"]
         if str(topics) != "nan":
-            interests = set([intr.strip() for intr in topics.split(",")])
+            interests = set([intr.strip() for intr in str(topics).split(";")])
         else:
             interests = set()
 
@@ -94,6 +94,8 @@ if __name__ == "__main__":
         "Enter suffix for survey data filename: anonymized_surveys_")
     survey_filename = "data/anonymized_surveys_" + survey_file_suffix + ".csv"
 
+    num_students = int(input("Enter a number of students: "))
+
     # Parse data from survey to create Student objects
     try:
         students = load_student_data(survey_filename)
@@ -103,17 +105,15 @@ if __name__ == "__main__":
         exit()
     print("Students loaded: ", len(students))
 
-    for i in range(3, 6):
-        students_sample = deepcopy(random.sample(
-            students, random.randint(27, 32)))
-        students_sample.sort(key=lambda student: student.name)
+    students_sample = deepcopy(random.sample(
+        students, num_students))
+    students_sample.sort(key=lambda student: student.name)
 
-        # Create the graph from the previously-loaded students, connecting
-        # non-silver-bulleted Student objects as vertices # with edge weights
-        # representing compatibility
-        sample_student_graph = create_student_graph(students_sample)
-        graph_filename = "data/student_graph_" + survey_file_suffix + str(i)
-        joblib.dump(sample_student_graph, graph_filename)
-        print("Saving", graph_filename)
-
-    print("Created 3 sample student graphs.")
+    # Create the graph from the previously-loaded students, connecting
+    # non-silver-bulleted Student objects as vertices # with edge weights
+    # representing compatibility
+    sample_student_graph = create_student_graph(students_sample)
+    graph_filename = "data/student_graph_" + \
+        survey_file_suffix + str(num_students)
+    joblib.dump(sample_student_graph, graph_filename)
+    print("Saving", graph_filename)
