@@ -51,10 +51,6 @@ def assign_teams_greedy(four_cliques, five_cliques, n_4, n_5):
 def assign_teams_random(four_cliques, five_cliques, n_4, n_5):
     """
     Randomly assign Students into teams of 4 or 5.
-
-    Optionally provide pre-formed teams or partial teams, and these will be
-    copied and filled up with 4 or 5 students each.
-    May use as a baseline for scoring another algorithm.
     """
     # Copy and randomly shuffle cliques to be chosen from
     four_cliques = copy(four_cliques)
