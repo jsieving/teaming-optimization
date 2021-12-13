@@ -65,7 +65,7 @@ def team_evaluation(team):
     # Check if they are lacking a "good" (intr+exp > 8) PM
     max_pm = max([student.mgmt for student in team])
     # 0 (good) -> 1 (bad)
-    pm_defncy = 1 - max(0, 8-max_pm) / 8
+    pm_defncy = max(0, 8-max_pm) / 8
 
     # Return weighted cost
     # Lower (good) -> higher (bad)
@@ -80,6 +80,8 @@ def team_evaluation(team):
 def team_compatibility(team):
     """
     Computes a score for 1 team.
+
+    Returns a value where lower is worse and higher is better.
     If any 2 students have silver bullet between them, returns 0.
     """
     try:
@@ -111,9 +113,9 @@ def team_compatibility(team):
 
     # Return weighted score (yep, we're normalizing and then weighting them)
     return (
-        4 * scaled_commitment +
+        3 * scaled_commitment +
         3 * skill_sufficiency +
         3 * skill_distribution +
         2 * scaled_topics +
-        scaled_preference
+        5 * scaled_preference
     )
