@@ -1,6 +1,8 @@
 import numpy as np
 import itertools
 
+from numpy.core.fromnumeric import sort
+
 
 def count_students(teams):
     """
@@ -57,6 +59,31 @@ def violates_silver_bullets(team):
     return False
 
 
+def list_met_partner_prefs(team):
+    """
+    Counts the number of instances where a student on a team had requested to
+    work with another student on that team.
+
+    For example, if Alice and Bob are on a team and Alice requested to work with Bob, that gets a 1.
+
+    If Alice and Bob both requested each other, that gets a 2.
+
+    If Alice, Bob and Carol are on a team and Alice requested to work with Bob
+    and Carol, that gets a 2.
+
+    If Alice, Bob and Carol all mutually rquested each other, that gets a 6.
+    """
+    met_partner_prefs = []
+
+    teammate_pairs = itertools.permutations(team, 2)
+
+    for studentA, studentB in teammate_pairs:
+        if studentA.prefers(studentB):
+            met_partner_prefs.append((studentA, studentB))
+
+    return met_partner_prefs
+
+
 def count_met_partner_prefs(team):
     """
     Counts the number of instances where a student on a team had requested to
@@ -72,7 +99,8 @@ def count_met_partner_prefs(team):
     If Alice, Bob and Carol all mutually rquested each other, that gets a 6.
     """
     all_preferences = {}  # students who are some # of teammates' preference
-    met_partner_prefs = 0  # 1 point for each preference if they're on the team
+    # 1 point for each preference if they're on the team
+    num_met_partner_prefs = 0
 
     # Count up times each student (even non-teammates) was requested by someone
     # on this team
@@ -82,9 +110,9 @@ def count_met_partner_prefs(team):
 
     # Add up # times each student on the team was requested by their teammates
     for student in team:
-        met_partner_prefs += all_preferences.get(student.name, 0)
+        num_met_partner_prefs += all_preferences.get(student.name, 0)
 
-    return met_partner_prefs
+    return num_met_partner_prefs
 
 
 def count_mutual_partner_prefs(team):
@@ -235,6 +263,22 @@ def percent_strongly_skilled(team):
     return len(specialized_students) / len(team)
 
 
+def sorted_topics(team):
+    """
+    Returns a list of (topic, votes) tuples sorted by number of votes.
+
+    Represents the number of times each topic was voted for on a team.
+    """
+    all_topics = {}  # topics liked by some # of students
+
+    # Count up votes for each candidate topic
+    for student in team:
+        for topic in student.interests:
+            all_topics[topic] = all_topics.get(topic, 0) + 1
+
+    return sorted(all_topics.items(), key=lambda item: item[1], reverse=True)
+
+
 def sorted_topic_votes(team):
     """
     Returns a list of the numbers of students who voted for different topics,
@@ -248,14 +292,9 @@ def sorted_topic_votes(team):
     out how much agreement there can be on the project topic if n topics could
     be incorporated into the project.
     """
-    all_topics = {} # topics liked by some # of students
+    team_sorted_topics = sorted_topics(team)
 
-    # Count up votes for each candidate topic
-    for student in team:
-        for topic in student.interests:
-            all_topics[topic] = all_topics.get(topic, 0) + 1
-
-    return sorted(all_topics.values(), reverse=True)
+    return [votes for topic, votes in team_sorted_topics]
 
 def overlaps(nodes1, nodes2):
     """
