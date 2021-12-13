@@ -11,86 +11,91 @@ from scoring import (
 )
 
 
+# Try to load a graph of students
 student_graph_suffix = input(
     "Enter suffix for student graph filename: student_graph_")
-for i in range(3, 6):
-    student_graph_filename = "data/student_graph_" + \
-        student_graph_suffix + str(i)
-    try:
-        student_graph = joblib.load(student_graph_filename)
-    except FileNotFoundError:
-        print("File '%s' not found. Please run data_loader.py to generate student graphs." %
-              student_graph_filename)
-        exit()
+student_graph_filename = "data/student_graph_" + student_graph_suffix
+try:
+    student_graph = joblib.load(student_graph_filename)
+except FileNotFoundError:
+    print("File '%s' not found. Please run data_loader.py to generate student graphs." %
+          student_graph_filename)
+    exit()
 
-    # Load or create all 4-cliques
-    four_cliques_filename = "data/four_cliques_" + \
-        student_graph_suffix + str(i)
-    try:
-        four_cliques = joblib.load(four_cliques_filename)
-        print("%i four cliques loaded" % len(four_cliques))
-    except FileNotFoundError:
-        print(four_cliques_filename, "not found. Generating 4-cliques...")
-        # Compute all possible 4-cliques
-        four_cliques = find_k_clique(student_graph, 4)
-        print("%i 4-cliques found." % len(four_cliques))
+# Load or create all 4-cliques
+four_cliques_filename = "data/four_cliques_" + student_graph_suffix
+try:
+    four_cliques = joblib.load(four_cliques_filename)
+    print("%i four cliques loaded" % len(four_cliques))
+except FileNotFoundError:
+    print(four_cliques_filename, "not found. Generating 4-cliques...")
+    # Compute all possible 4-cliques
+    four_cliques = find_k_clique(student_graph, 4)
+    print("%i 4-cliques found." % len(four_cliques))
 
-        # Find team compatability of each clique
-        for team in four_cliques:
-            # compute team compatibility and store as a property of the graph
-            team.graph['compat'] = team_compatibility(team.nodes)
+    # Do not save any cliques containing silver bullets
+    # They shouldn't make it this far, but checking can save a lot of time
+    four_cliques = [
+        team for team in four_cliques if team.graph['compat'] > 0]
+    print("%i nonzero 4-cliques found." % len(four_cliques))
 
-        # sort the cliques by highest compatibility scores
-        four_cliques = [
-            team for team in four_cliques if team.graph['compat'] > 0]
-        print("%i nonzero 4-cliques found." % len(four_cliques))
+    joblib.dump(four_cliques, four_cliques_filename)
+    print("4-cliques saved in", four_cliques_filename)
 
-        four_cliques.sort(key=lambda team: team.graph['compat'], reverse=True)
+# Load or create all 5-cliques
+five_cliques_filename = "data/five_cliques_" + student_graph_suffix
+try:
+    five_cliques = joblib.load(five_cliques_filename)
+    print("%i five cliques loaded" % len(five_cliques))
+except FileNotFoundError:
+    print(five_cliques_filename, "not found. Generating 5-cliques...")
+    # Compute all possible 5-cliques
+    five_cliques = find_k_clique(student_graph, 5)
+    print("%i 5-cliques found." % len(five_cliques))
 
-        joblib.dump(four_cliques, four_cliques_filename)
-        print("4-cliques saved in", four_cliques_filename)
+    # Do not save any cliques containing silver bullets
+    # They shouldn't make it this far, but checking can save a lot of time
+    five_cliques = [
+        team for team in five_cliques if team.graph['compat'] > 0]
+    print("%i nonzero 5-cliques found." % len(five_cliques))
 
-    # Load or create all 5-cliques
-    five_cliques_filename = "data/five_cliques_" + \
-        student_graph_suffix + str(i)
-    try:
-        five_cliques = joblib.load(five_cliques_filename)
-        print("%i five cliques loaded" % len(five_cliques))
-    except FileNotFoundError:
-        print(five_cliques_filename, "not found. Generating 5-cliques...")
-        # Compute all possible 5-cliques
-        five_cliques = find_k_clique(student_graph, 5)
-        print("%i 5-cliques found." % len(five_cliques))
+    joblib.dump(five_cliques, five_cliques_filename)
+    print("5-cliques saved in", five_cliques_filename)
 
-        # Find team compatability of each clique
-        for team in five_cliques:
-            # compute team compatibility and store as a property of the graph
-            team.graph['compat'] = team_compatibility(team.nodes)
+rescore = input("Would you like to re-score the cliques? [N/y]: ")
+if 'y' in rescore.lower():
+    # Find team compatability of each 4-clique
+    for team in four_cliques:
+        # Compute team compatibility and store as a property of the graph
+        team.graph['compat'] = team_compatibility(team.nodes)
 
-        # sort the cliques by highest compatibility scores
-        five_cliques = [
-            team for team in five_cliques if team.graph['compat'] > 0]
-        print("%i nonzero 5-cliques found." % len(five_cliques))
-        five_cliques.sort(key=lambda team: team.graph['compat'], reverse=True)
+    # Find team compatability of each 5-clique
+    for team in five_cliques:
+        # Compute team compatibility and store as a property of the graph
+        team.graph['compat'] = team_compatibility(team.nodes)
 
-        joblib.dump(five_cliques, five_cliques_filename)
-        print("5-cliques saved in", five_cliques_filename)
+    # sort the cliques by highest compatibility scores
+    four_cliques.sort(key=lambda team: team.graph['compat'], reverse=True)
+    five_cliques.sort(key=lambda team: team.graph['compat'], reverse=True)
 
+print("All cliques loaded and scored.")
 
-print("All teams loaded. Running random assignments..")
-_, rand_teams = assign_teams_random(students)
+# Figure out how many groups of 4 and 5 to create
+num_students = len(student_graph.nodes)
+num_5teams, num_4teams = num_size_teams(num_students)
+print("Students: %i; 4-teams: %i; 5-teams: %i" %
+      (num_students, num_4teams, num_5teams))
 
-# print("Cost: (lower is better): %.3f" % assignment_cost(rand_teams))
-# for team in rand_teams:
-#     print(team, "\tCompat: %.2f Eval: %.2f" % (team_compatibility(
-#         team), team_evaluation(team)))
+print("Running random assignments...")
+rand_teams = assign_teams_random(
+    four_cliques, five_cliques, num_4teams, num_5teams)
+print("Cost: (lower is better): %.3f" % assignment_cost(rand_teams))
+for team in rand_teams:
+    print(team.nodes, "\tCompat: %.2f; Eval: %.2f" %
+          (team_compatibility(team), team_evaluation(team)))
+
 
 # print("All teams loaded. Running greedy..")
-# # Figure out how many groups of 4 and 5 to create
-# num_students = len(students)
-# num_5teams, num_4teams = num_size_teams(num_students)
-# print("Students: %i 4-teams: %i 5-teams: %i" %
-#       (num_students, num_4teams, num_5teams))
 # # Greedily assign required numbers of teams of 4 and 5
 # cost, teams = assign_teams_greedy(
 #     four_cliques, five_cliques, num_4teams, num_5teams)
