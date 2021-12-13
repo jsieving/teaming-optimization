@@ -9,6 +9,8 @@ from scoring import assignment_cost, team_compatibility, team_evaluation
 
 
 def assign_teams_greedy(four_cliques, five_cliques, n_4, n_5):
+    # Define this here in case no 4-cliques are needed
+    assigned_students = set()
     teams_of_4 = []
     start_at = 0
     while len(teams_of_4) < n_4:
