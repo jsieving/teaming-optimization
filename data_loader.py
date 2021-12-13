@@ -103,9 +103,9 @@ if __name__ == "__main__":
         exit()
     print("Students loaded: ", len(students))
 
-    for i in range(3):
+    for i in range(3, 6):
         students_sample = deepcopy(random.sample(
-            students, random.randint(20, 24)))
+            students, random.randint(27, 32)))
         students_sample.sort(key=lambda student: student.name)
 
         # Create the graph from the previously-loaded students, connecting
