@@ -1,3 +1,7 @@
+"""
+Code to test helper functions. Currently just tests `overlaps`, but additional
+tests should go here.
+"""
 from helpers import overlaps
 import networkx as nx
 
