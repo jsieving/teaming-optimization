@@ -74,6 +74,9 @@ except FileNotFoundError:
     joblib.dump(five_cliques, five_cliques_filename)
     print("5-cliques saved in", five_cliques_filename)
 
+# This will give you the option of re-assigning compatibilty scores, in case the
+# compatibility function has been updated. These changes will not be saved in
+# the clique data files.
 rescore = input("Would you like to re-score the cliques? [N/y]: ")
 if 'y' in rescore.lower():
     # Find team compatability of each 4-clique
@@ -98,10 +101,12 @@ num_5teams, num_4teams = num_size_teams(num_students)
 print("Students: %i; 4-teams: %i; 5-teams: %i" %
       (num_students, num_4teams, num_5teams))
 
+# Randomly assign teams and score result
 print("Running random assignments...")
 rand_teams = assign_teams_random(
     four_cliques, five_cliques, num_4teams, num_5teams)
 print("Cost: (lower is better): %.3f" % assignment_cost(rand_teams))
+# Show more detailed info on members of each team
 for team in rand_teams:
     print("\nCompat: %.2f Eval: %.2f" %
           (team.graph['compat'], team_evaluation(team)))
@@ -115,14 +120,18 @@ for team in rand_teams:
             student.intr_fab, student.exp_fab,
             student.commitment
         ))
+    # Show what topics the team had most in common
     print(sorted_topics(team)[:3])
+    # List any partner requests satistifed by the team
     print(list_met_partner_prefs(team))
 
 
+# Assign teams with greedy algorithm and score result
 print("Running greedy...")
 # Greedily assign required numbers of teams of 4 and 5
 # Set "best" cost yet to a very high (bad) value
 best_greedy_teams, best_greedy_cost = None, 1000
+# Show more detailed info on members of each team
 for i in range(10):
     greedy_teams = assign_teams_greedy(
         four_cliques[i:], five_cliques, num_4teams, num_5teams)
@@ -145,9 +154,13 @@ for team in best_greedy_teams:
             student.intr_fab, student.exp_fab,
             student.commitment
         ))
+    # Show what topics the team had most in common
     print(sorted_topics(team)[:3])
+    # List any partner requests satistifed by the team
     print(list_met_partner_prefs(team))
 
+
+# NOTE: Possible future work, but doesn't quite work yet
 # print("Running recursive backtracking...")
 
 # # Demote 4-cliques so 5s will be chosen first
