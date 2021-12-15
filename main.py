@@ -20,10 +20,11 @@ from scoring import (
     assignment_cost, team_compatibility, team_evaluation)
 
 
-cliques_suffix = input("Enter suffix for cliques filenames (i.e., 'A20'): ")
+sample_suffix = input(
+    "Enter suffix for graph and cliques filenames (i.e., 'A20'): ")
 
 # Load a graph of students
-student_graph_filename = "data/student_graph_" + cliques_suffix
+student_graph_filename = "data/student_graph_" + sample_suffix
 try:
     # Try to load file specified by suffix
     student_graph = joblib.load(student_graph_filename)
@@ -35,7 +36,7 @@ except FileNotFoundError:
     exit()
 
 # Load all 4-cliques
-four_cliques_filename = "data/4_cliques_" + cliques_suffix
+four_cliques_filename = "data/4_cliques_" + sample_suffix
 try:
     # Try to load file specified by suffix
     four_cliques = joblib.load(four_cliques_filename)
@@ -47,7 +48,7 @@ except FileNotFoundError:
     exit()
 
 # Load all 5-cliques
-five_cliques_filename = "data/5_cliques_" + cliques_suffix
+five_cliques_filename = "data/5_cliques_" + sample_suffix
 try:
     # Try to load file specified by suffix
     five_cliques = joblib.load(five_cliques_filename)
