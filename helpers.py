@@ -169,9 +169,9 @@ def skill_deficiency(team):
     deficient_mech = max(0, 8-max_mech)**2
 
     # Basically computing the "distance" from complete sufficiency
-    overall_deficiency = np.sqrt(sum(
+    overall_deficiency = sum(
         [deficient_mgmt, deficient_elec, deficient_prog, deficient_mech]
-    ))
+    )
 
     # Max possible is 12, so noramlize to 0 (good) -> 1 (bad)
     return overall_deficiency / 12
@@ -197,9 +197,9 @@ def exp_deficiency(team):
     deficient_cad = max(0, 4-max_cad)**2
 
     # Basically computing the "distance" from complete sufficiency
-    overall_deficiency = np.sqrt(sum(
+    overall_deficiency = sum(
         [deficient_elec, deficient_prog, deficient_fab, deficient_cad]
-    ))
+    )
 
     # Max possible is 6, so noramlize to 0 (good) -> 1 (bad)
     return overall_deficiency / 6
@@ -225,9 +225,9 @@ def intr_deficiency(team):
     deficient_cad = max(0, 4-max_cad)**2
 
     # Basically computing the "distance" from complete sufficiency
-    overall_deficiency = np.sqrt(sum(
+    overall_deficiency = sum(
         [deficient_elec, deficient_prog, deficient_fab, deficient_cad]
-    ))
+    )
 
     # Max possible is 6, so noramlize to 0 (good) -> 1 (bad)
     return overall_deficiency / 6

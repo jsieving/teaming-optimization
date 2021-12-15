@@ -28,7 +28,7 @@ def assignment_cost(teams):
     except:
         # Catch if it's a list of lists
         costs = [team_evaluation(team) for team in teams]
-    return np.sqrt(sum(costs))
+    return sum(costs)
 
 
 def team_evaluation(team):
@@ -69,7 +69,7 @@ def team_evaluation(team):
 
     # Return weighted cost
     # Lower (good) -> higher (bad)
-    return np.sqrt(
+    return (
         (4 * odd_person_out) ** 2 +
         (3 * pm_defncy) ** 2 +
         (2 * exp_defncy) ** 2 +
