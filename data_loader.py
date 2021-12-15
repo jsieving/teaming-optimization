@@ -10,7 +10,6 @@ import joblib
 import networkx as nx
 import pandas as pd
 import random
-from copy import deepcopy
 from clique_finding import find_k_clique
 from helpers import violates_anti_prefs
 from student import Student
@@ -96,7 +95,6 @@ def load_student_data(filename):
         # Add student to output list
         students.append(s)
 
-    students.sort(key=lambda student: student.name)
     return students
 
 
@@ -173,9 +171,7 @@ if __name__ == "__main__":
     num_students = int(input("Enter a number of students: "))
 
     # Create a random sample of students of the size specified
-    students_sample = deepcopy(random.sample(
-        students, num_students))
-    students_sample.sort(key=lambda student: student.name)
+    students_sample = random.sample(students, num_students)
 
     # Create the graph from the previously-loaded students, using Student
     # objects as vertices and making an edge between each pair of students that
