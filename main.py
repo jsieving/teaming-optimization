@@ -7,93 +7,65 @@ from scoring import (
     assignment_cost, team_compatibility, team_evaluation)
 
 
-# Try to load a graph of students
-student_graph_suffix = input(
-    "Enter suffix for student graph filename: student_graph_")
-student_graph_filename = "data/student_graph_" + student_graph_suffix
+cliques_suffix = input("Enter suffix for cliques filenames (i.e., 'A20'): ")
+
+# Load a graph of students
+student_graph_filename = "data/student_graph_" + cliques_suffix
 try:
     student_graph = joblib.load(student_graph_filename)
+    print("%i students loaded" % len(student_graph.nodes))
 except FileNotFoundError:
     print("File '%s' not found. Please run data_loader.py to generate student graphs." %
           student_graph_filename)
     exit()
 
-# Load or create all 4-cliques
-four_cliques_filename = "data/four_cliques_" + student_graph_suffix
+# Load all 4-cliques
+four_cliques_filename = "data/4_cliques_" + cliques_suffix
 try:
     four_cliques = joblib.load(four_cliques_filename)
     print("%i 4-cliques loaded" % len(four_cliques))
 except FileNotFoundError:
-    print(four_cliques_filename, "not found. Generating 4-cliques...")
-    # Compute all possible 4-cliques
-    four_cliques = find_k_clique(student_graph, 4)
-    print("%i 4-cliques found." % len(four_cliques))
+    print("File '%s' not found. Please run data_loader.py to generate student graphs and cliques." %
+          four_cliques_filename)
+    exit()
 
-    # Find team compatability of each 4-clique
-    for team in four_cliques:
-        # Compute team compatibility and store as a property of the graph
-        team.graph['compat'] = team_compatibility(team.nodes)
-
-    # Do not save any cliques containing silver bullets
-    # They shouldn't make it this far, but checking can save a lot of time
-    four_cliques = [
-        team for team in four_cliques if team.graph['compat'] > 0]
-    print("%i nonzero 4-cliques found." % len(four_cliques))
-
-    # sort the cliques by highest compatibility scores
-    four_cliques.sort(key=lambda team: team.graph['compat'], reverse=True)
-
-    joblib.dump(four_cliques, four_cliques_filename)
-    print("4-cliques saved in", four_cliques_filename)
-
-# Load or create all 5-cliques
-five_cliques_filename = "data/five_cliques_" + student_graph_suffix
+# Load all 5-cliques
+five_cliques_filename = "data/5_cliques_" + cliques_suffix
 try:
     five_cliques = joblib.load(five_cliques_filename)
     print("%i 5-cliques loaded" % len(five_cliques))
 except FileNotFoundError:
-    print(five_cliques_filename, "not found. Generating 5-cliques...")
-    # Compute all possible 5-cliques
-    five_cliques = find_k_clique(student_graph, 5)
-    print("%i 5-cliques found." % len(five_cliques))
+    print("File '%s' not found. Please run data_loader.py to generate student graphs and cliques." %
+          five_cliques_filename)
+    exit()
 
-    # Find team compatability of each 5-clique
-    for team in five_cliques:
-        # Compute team compatibility and store as a property of the graph
-        team.graph['compat'] = team_compatibility(team.nodes)
+# This will re-assign compatibility scores, which are not saved with the clique
+# data. This is a relatively fast operation, and if the compatibility function
+# is being updated, this makes it easier to ensure you're not using old
+# compatibility scores.
 
-    # Do not save any cliques containing silver bullets
-    # They shouldn't make it this far, but checking can save a lot of time
-    five_cliques = [
-        team for team in five_cliques if team.graph['compat'] > 0]
-    print("%i nonzero 5-cliques found." % len(five_cliques))
+# Find team compatability of each 4-clique
+for team in four_cliques:
+    # Compute team compatibility and store as a property of the graph
+    team.graph['compat'] = team_compatibility(team.nodes)
 
-    # sort the cliques by highest compatibility scores
-    five_cliques.sort(key=lambda team: team.graph['compat'], reverse=True)
+# Find team compatability of each 5-clique
+for team in five_cliques:
+    # Compute team compatibility and store as a property of the graph
+    team.graph['compat'] = team_compatibility(team.nodes)
 
-    joblib.dump(five_cliques, five_cliques_filename)
-    print("5-cliques saved in", five_cliques_filename)
+# Filter out any 4-cliques with negative compatibility
+four_cliques = [team for team in four_cliques if team.graph['compat'] > 0]
+print("%i four-cliques loaded." % len(four_cliques))
+# Filter out any 5-cliques with negative compatibility
+five_cliques = [team for team in five_cliques if team.graph['compat'] > 0]
+print("%i five-cliques loaded." % len(five_cliques))
 
-# This will give you the option of re-assigning compatibilty scores, in case the
-# compatibility function has been updated. These changes will not be saved in
-# the clique data files.
-rescore = input("Would you like to re-score the cliques? [N/y]: ")
-if 'y' in rescore.lower():
-    # Find team compatability of each 4-clique
-    for team in four_cliques:
-        # Compute team compatibility and store as a property of the graph
-        team.graph['compat'] = team_compatibility(team.nodes)
+# sort the cliques by highest compatibility scores
+four_cliques.sort(key=lambda team: team.graph['compat'], reverse=True)
+five_cliques.sort(key=lambda team: team.graph['compat'], reverse=True)
 
-    # Find team compatability of each 5-clique
-    for team in five_cliques:
-        # Compute team compatibility and store as a property of the graph
-        team.graph['compat'] = team_compatibility(team.nodes)
-
-    # sort the cliques by highest compatibility scores
-    four_cliques.sort(key=lambda team: team.graph['compat'], reverse=True)
-    five_cliques.sort(key=lambda team: team.graph['compat'], reverse=True)
-
-print("All cliques loaded and scored.")
+print("All cliques loaded and sorted.")
 
 # Figure out how many groups of 4 and 5 to create
 num_students = len(student_graph.nodes)

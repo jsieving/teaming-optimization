@@ -1,5 +1,9 @@
 """
-Deals with importing data from survey results and converting to Student objects
+Deals with importing data from survey results and converting to Student
+objects.
+
+When run as a main program, saves graph and clique data created from a sample
+of the loaded data.
 """
 import itertools as it
 import joblib
@@ -7,6 +11,8 @@ import networkx as nx
 import pandas as pd
 import random
 from copy import deepcopy
+from clique_finding import find_k_clique
+from helpers import violates_anti_prefs
 from student import Student
 
 
@@ -91,6 +97,23 @@ def create_student_graph(students):
     return student_graph
 
 
+def create_save_k_cliques(k, student_graph, suffix):
+    # Load all 4-cliques
+    k_cliques_filename = "data/%i_cliques_%s" % (k, suffix)
+    # Compute all possible 4-cliques
+    print("Generating %i-cliques..." % k)
+    k_cliques = find_k_clique(student_graph, k)
+    print("%i %i-cliques found." % (len(k_cliques), k))
+
+    # Do not save any cliques that put anti-preferences together
+    # They shouldn't make it this far, but checking can save a lot of time
+    k_cliques = [team for team in k_cliques if not violates_anti_prefs(team)]
+    print("%i valid %i-cliques found." % (len(k_cliques), k))
+
+    joblib.dump(k_cliques, k_cliques_filename)
+    print("%i-cliques saved in %s" % (k, k_cliques_filename))
+
+
 if __name__ == "__main__":
     survey_file_suffix = input(
         "Enter suffix for survey data filename: anonymized_surveys_")
@@ -119,3 +142,8 @@ if __name__ == "__main__":
         survey_file_suffix + str(num_students)
     joblib.dump(sample_student_graph, graph_filename)
     print("Saving", graph_filename)
+
+    cliques_suffix = survey_file_suffix + str(num_students)
+
+    create_save_k_cliques(4, sample_student_graph, cliques_suffix)
+    create_save_k_cliques(5, sample_student_graph, cliques_suffix)
