@@ -1,8 +1,6 @@
 import numpy as np
 import itertools
 
-from numpy.core.fromnumeric import sort
-
 
 def count_students(teams):
     """
@@ -22,8 +20,8 @@ def sorted_teams(teams):
     sorted alphabetically by first-listed student name.
     """
     for team in teams:
-        team.sort(key=lambda student:student.name)
-    teams.sort(key=lambda team:team[0].name)
+        team.sort(key=lambda student: student.name)
+    teams.sort(key=lambda team: team[0].name)
     return teams
 
 
@@ -36,7 +34,7 @@ def num_size_teams(num_students):
     """
     # Nonsensical math to figure out how many students on each team
     reqd_teams = min(np.ceil(num_students / 5),
-                    np.floor(num_students / 4))
+                     np.floor(num_students / 4))
     full_teams_proxy = reqd_teams - (-num_students % 5)
     teams_of_5 = full_teams_proxy if full_teams_proxy >= 0 else reqd_teams
     teams_of_4 = reqd_teams - teams_of_5
@@ -145,7 +143,7 @@ def skill_deficiency(team):
     the strongest student in that area. Currently this is the sum of interest
     and experience, and a score of 8 is considered to be completely sufficient
     for any given area.
-    
+
     For example, if a team has a student with 3 interest in programming and 5
     experience, or 4 and 4, that team will be considered to be sufficiently
     covered for programming.
@@ -295,6 +293,7 @@ def sorted_topic_votes(team):
     team_sorted_topics = sorted_topics(team)
 
     return [votes for topic, votes in team_sorted_topics]
+
 
 def overlaps(nodes1, nodes2):
     """
