@@ -1,11 +1,9 @@
 """
-Functions which produce complete team assignments
+Functions which assign multiple non-overlapping teams of students
 """
-import numpy as np
 from random import shuffle
-from copy import copy, deepcopy
-from helpers import count_students, num_size_teams, overlaps, sorted_teams
-from scoring import assignment_cost, team_compatibility, team_evaluation
+from helpers import overlaps
+from scoring import assignment_cost, team_compatibility
 
 
 def assign_teams_greedy(four_cliques, five_cliques, n_4, n_5):
@@ -55,8 +53,8 @@ def assign_teams_random(four_cliques, five_cliques, n_4, n_5):
     Randomly assign Students into teams of 4 or 5.
     """
     # Copy and randomly shuffle cliques to be chosen from
-    four_cliques = copy(four_cliques)
-    five_cliques = copy(five_cliques)
+    four_cliques = four_cliques[:]
+    five_cliques = five_cliques[:]
     shuffle(four_cliques)
     shuffle(five_cliques)
 

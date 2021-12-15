@@ -2,10 +2,9 @@
 Functions for scoring team assignments on different metrics
 """
 import numpy as np
-from math import comb, perm
+from math import perm
 from helpers import (
     count_met_partner_prefs,
-    count_mutual_partner_prefs,
     percent_strongly_skilled,
     exp_deficiency,
     intr_deficiency,

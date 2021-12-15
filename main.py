@@ -1,6 +1,4 @@
 import joblib
-import time
-from networkx.classes import graph
 from assignments import (
     assign_teams_greedy, assign_teams_random, assign_teams_rec)
 from helpers import list_met_partner_prefs, num_size_teams, sorted_topics
