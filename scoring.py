@@ -11,7 +11,7 @@ from helpers import (
     intr_deficiency,
     skill_deficiency,
     sorted_topic_votes,
-    violates_silver_bullets
+    violates_anti_prefs
 )
 
 
@@ -91,7 +91,7 @@ def team_compatibility(team):
         # Continue if it's a list
         pass
 
-    if violates_silver_bullets(team):
+    if violates_anti_prefs(team):
         return 0
 
     # Evaluate team on commitment, topic agreement, partner prefs,

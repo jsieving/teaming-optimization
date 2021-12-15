@@ -20,34 +20,36 @@ def load_student_data(filename):
 
     # Each row represents a student
     for idx, row in data.iterrows():
-        anti_prefs = row["AntiPrefs"]
-        if str(anti_prefs) != "nan":
-            silver_bullets = set([sb.strip()
-                                 for sb in str(anti_prefs).split(";")])
+        anti_prefs_data = row["AntiPrefs"]
+        if str(anti_prefs_data) != "nan":
+            anti_prefs = set([sb.strip()
+                              for sb in str(anti_prefs_data).split(";")])
         else:
-            silver_bullets = set()
+            anti_prefs = set()
 
-        prefs = row["Prefs"]
-        if str(prefs) != "nan":
-            preferences = set([pref.strip() for pref in str(prefs).split(";")])
+        prefs_data = row["Prefs"]
+        if str(prefs_data) != "nan":
+            preferences = set([pref.strip()
+                              for pref in str(prefs_data).split(";")])
         else:
             preferences = set()
 
-        # Convert interests to set
-        topics = row["ProjTopics"]
-        if str(topics) != "nan":
-            interests = set([intr.strip() for intr in str(topics).split(";")])
+        # Convert topics to set
+        topics_data = row["ProjTopics"]
+        if str(topics_data) != "nan":
+            topics = set([intr.strip()
+                         for intr in str(topics_data).split(";")])
         else:
-            interests = set()
+            topics = set()
 
         # Create student and add to list
         s = Student(
             name=row["Student"],
             pronouns=row["Pronouns"],
             commitment=commitments[idx],
-            interests=interests,
+            topics=topics,
             preferences=preferences,
-            silver_bullets=silver_bullets,
+            anti_prefs=anti_prefs,
             intr_mgmt=row["IntLeadership"],
             exp_mgmt=row["ExpLeadership"],
             intr_elec=row["IntElecProto"],

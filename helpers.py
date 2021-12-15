@@ -44,17 +44,17 @@ def num_size_teams(num_students):
     return teams_of_5, teams_of_4
 
 
-def violates_silver_bullets(team):
+def violates_anti_prefs(team):
     """
     Checks if there is a silver bullet for any student in a list from any other
     student in the list.
     """
-    all_silver_bullets = set()
+    all_anti_prefs = set()
     # Merge silver bullets of all team members
     for student in team:
-        all_silver_bullets |= student.silver_bullets
+        all_anti_prefs |= student.anti_prefs
     for student in team:
-        if student.name in all_silver_bullets:
+        if student.name in all_anti_prefs:
             return True
     return False
 
@@ -273,7 +273,7 @@ def sorted_topics(team):
 
     # Count up votes for each candidate topic
     for student in team:
-        for topic in student.interests:
+        for topic in student.topics:
             all_topics[topic] = all_topics.get(topic, 0) + 1
 
     return sorted(all_topics.items(), key=lambda item: item[1], reverse=True)
