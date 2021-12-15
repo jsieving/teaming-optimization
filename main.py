@@ -1,3 +1,16 @@
+"""
+Generates possible teams from saved student data.
+
+- Loads a graph representing a class of students, as well as the list of 4- and 
+  5-cliques in that graph.
+- Scores the cliques using the compatibility function and sorts them.
+- Computes how many teams of 4 and 5 must be made for the number of students in 
+  the graph.
+- Runs assignment functions from `assignments.py` on the cliques to create
+  non-overlapping teams.
+- Scores the overall team list and prints data about the individual teams 
+  created.
+"""
 import joblib
 from assignments import (
     assign_teams_greedy, assign_teams_random, assign_teams_rec)
@@ -12,9 +25,11 @@ cliques_suffix = input("Enter suffix for cliques filenames (i.e., 'A20'): ")
 # Load a graph of students
 student_graph_filename = "data/student_graph_" + cliques_suffix
 try:
+    # Try to load file specified by suffix
     student_graph = joblib.load(student_graph_filename)
     print("%i students loaded" % len(student_graph.nodes))
 except FileNotFoundError:
+    # Print instructions and quit if file not found
     print("File '%s' not found. Please run data_loader.py to generate student graphs." %
           student_graph_filename)
     exit()
@@ -22,9 +37,11 @@ except FileNotFoundError:
 # Load all 4-cliques
 four_cliques_filename = "data/4_cliques_" + cliques_suffix
 try:
+    # Try to load file specified by suffix
     four_cliques = joblib.load(four_cliques_filename)
     print("%i 4-cliques loaded" % len(four_cliques))
 except FileNotFoundError:
+    # Print instructions and quit if file not found
     print("File '%s' not found. Please run data_loader.py to generate student graphs and cliques." %
           four_cliques_filename)
     exit()
@@ -32,17 +49,19 @@ except FileNotFoundError:
 # Load all 5-cliques
 five_cliques_filename = "data/5_cliques_" + cliques_suffix
 try:
+    # Try to load file specified by suffix
     five_cliques = joblib.load(five_cliques_filename)
     print("%i 5-cliques loaded" % len(five_cliques))
 except FileNotFoundError:
+    # Print instructions and quit if file not found
     print("File '%s' not found. Please run data_loader.py to generate student graphs and cliques." %
           five_cliques_filename)
     exit()
 
 # This will re-assign compatibility scores, which are not saved with the clique
 # data. This is a relatively fast operation, and if the compatibility function
-# is being updated, this makes it easier to ensure you're not using old
-# compatibility scores.
+# is being updated, doing this in main every time, rather than making it
+# optional, makes it easier to ensure you're not using old compatibility scores.
 
 # Find team compatability of each 4-clique
 for team in four_cliques:
@@ -82,6 +101,7 @@ print("Cost: (lower is better): %.3f" % assignment_cost(rand_teams))
 for team in rand_teams:
     print("\nCompat: %.2f Eval: %.2f" %
           (team.graph['compat'], team_evaluation(team)))
+    # Show skill areas for each student
     for student in team.nodes:
         print("%s: %i/%i, %i/%i, %i/%i, %i/%i, %i/%i, %i" % (
             student.name,
@@ -99,23 +119,31 @@ for team in rand_teams:
 
 
 # Assign teams with greedy algorithm and score result
-print("Running greedy...")
+print("\n\nRunning greedy...")
 # Greedily assign required numbers of teams of 4 and 5
 # Set "best" cost yet to a very high (bad) value
 best_greedy_teams, best_greedy_cost = None, 1000
-# Show more detailed info on members of each team
+# Run greedy algorithm with i values from 0-9, choosing the ith-best clique as
+# the first team each time. Compare to previous results and keep track of the
+# result that minimized the cost.
 for i in range(10):
+    # Note: 4-cliques are always selected first and they affect the options for
+    # choosing 5-cliques, so don't worry about starting with the ith 5-clique.
     greedy_teams = assign_teams_greedy(
         four_cliques[i:], five_cliques, num_4teams, num_5teams)
+    # Compute cost for this iteration
     cost = assignment_cost(greedy_teams)
+    # Reassign best-yet values if this result is better than previous best
     if cost < best_greedy_cost:
         best_greedy_cost = cost
         best_greedy_teams = greedy_teams
 
+# Show more detailed info on members of each team
 print("Cost: (lower is better): %.3f" % best_greedy_cost)
 for team in best_greedy_teams:
     print("\nCompat: %.2f Eval: %.2f" %
           (team.graph['compat'], team_evaluation(team)))
+    # Show skill areas for each student
     for student in team.nodes:
         print("%s: %i/%i, %i/%i, %i/%i, %i/%i, %i/%i, %i" % (
             student.name,
