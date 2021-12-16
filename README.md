@@ -1,7 +1,7 @@
 # Teaming Optimization
 Final project for Discrete Math, Fall 2021 @ Olin College.
 
-By Jules Brettle [julesbrettle](https://github.com/julesbrettle), Annabelle Platt [@19platta](https://github.com/19platta), and Jane Sieving [@jsieving](https://github.com/jsieving).
+By Jules Brettle [@julesbrettle](https://github.com/julesbrettle), Annabelle Platt [@19platta](https://github.com/19platta), and Jane Sieving [@jsieving](https://github.com/jsieving).
 
 ## The Project
 Our goal was to create an algorithm for making teams of students in a class. We wanted to make it easier to form teams that had favorable qualities for ensuring the team would work well together.
