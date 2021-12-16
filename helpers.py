@@ -1,16 +1,6 @@
 import itertools
 
 
-def count_students(teams):
-    """
-    Counts the total number of students assigned in a list of teams.
-    """
-    total = 0
-    for team in teams:
-        total += len(team)
-    return total
-
-
 def num_size_teams(num_students):
     """
     Takes in a number of students and calculate how many 4 and 5 person teams
