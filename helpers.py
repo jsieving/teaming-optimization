@@ -1,4 +1,3 @@
-import numpy as np
 import itertools
 
 
@@ -19,12 +18,17 @@ def num_size_teams(num_students):
 
     Returns a tuple of (5-person teams, 4-person teams).
     """
-    # Nonsensical math to figure out how many students on each team
-    reqd_teams = min(np.ceil(num_students / 5),
-                     np.floor(num_students / 4))
-    full_teams_proxy = reqd_teams - (-num_students % 5)
-    teams_of_5 = full_teams_proxy if full_teams_proxy >= 0 else reqd_teams
-    teams_of_4 = reqd_teams - teams_of_5
+    # Count how many teams will be missing 1 person compared to a 5-person team
+    teams_of_4 = - num_students % 5
+
+    # If there are not enough students to make that many 4-person teams, it
+    # won't be possbile to evenly put people on 4 and 5 person teams
+    if num_students // 4 < teams_of_4:
+        return 0, 0
+
+    # Calculate number of 5-person teams based on how many are left after making
+    # 4-person teamsn
+    teams_of_5 = (num_students - 4 * teams_of_4) // 5
 
     return teams_of_5, teams_of_4
 
